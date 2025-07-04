@@ -19,37 +19,47 @@
 </head>
 <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
     <div class="container mx-auto p-4 max-w-6xl">
+        <!-- 语言切换按钮 -->
+        <div class="flex justify-end mb-4">
+            <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-1 flex">
+                <button id="langZh" class="lang-btn px-3 py-1 rounded text-sm font-medium bg-primary text-white">
+                    中文
+                </button>
+                <button id="langEn" class="lang-btn px-3 py-1 rounded text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200">
+                    English
+                </button>
+            </div>
+        </div>
+        
         <div class="text-center mb-6">
-            <h1 class="text-3xl font-bold mb-2">需求價格彈性互動教學</h1>
+            <h1 id="mainTitle" class="text-3xl font-bold mb-2">需求價格彈性互動教學</h1>
         </div>
 
         <div class="grid lg:grid-cols-5 gap-6">
             <!-- 情境選擇 - 移到左方 -->
             <div class="lg:col-span-1">
                 <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
-
-                    
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium mb-2"><span class="text-red-600 dark:text-red-400">任務1</span>：<span class="text-red-600 dark:text-red-400">需求彈性類型</span></label>
+                            <label id="task1Label" class="block text-sm font-medium mb-2"><span class="text-red-600 dark:text-red-400">任務1</span>：<span class="text-red-600 dark:text-red-400">需求彈性類型</span></label>
                             <div class="grid grid-cols-2 gap-2">
                                 <button id="highElastic" class="elasticity-btn px-3 py-2 rounded border-2 border-gray-300 dark:border-gray-600 hover:border-primary transition-colors text-base">
-                                    高彈性
+                                    <span id="highElasticText">高彈性</span>
                                 </button>
                                 <button id="lowElastic" class="elasticity-btn px-3 py-2 rounded border-2 border-gray-300 dark:border-gray-600 hover:border-primary transition-colors text-base">
-                                    低彈性
+                                    <span id="lowElasticText">低彈性</span>
                                 </button>
                             </div>
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium mb-2"><span class="text-red-600 dark:text-red-400">任務2</span>：<span class="text-red-600 dark:text-red-400">價格變化</span></label>
+                            <label id="task2Label" class="block text-sm font-medium mb-2"><span class="text-red-600 dark:text-red-400">任務2</span>：<span class="text-red-600 dark:text-red-400">價格變化</span></label>
                             <div class="grid grid-cols-2 gap-2">
                                 <button id="priceIncrease" class="price-btn px-3 py-2 rounded border-2 border-gray-300 dark:border-gray-600 hover:border-primary transition-colors text-base">
-                                    加價
+                                    <span id="priceIncreaseText">加價</span>
                                 </button>
                                 <button id="priceDecrease" class="price-btn px-3 py-2 rounded border-2 border-gray-300 dark:border-gray-600 hover:border-primary transition-colors text-base">
-                                    減價
+                                    <span id="priceDecreaseText">減價</span>
                                 </button>
                             </div>
                             <div id="task2Hint" class="text-xs text-gray-500 dark:text-gray-400 mt-2">
@@ -58,20 +68,19 @@
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium mb-2"><span class="text-red-600 dark:text-red-400">任務3</span>：<span class="text-red-600 dark:text-red-400">拖拽到圖表</span></label>
+                            <label id="task3Label" class="block text-sm font-medium mb-2"><span class="text-red-600 dark:text-red-400">任務3</span>：<span class="text-red-600 dark:text-red-400">拖拽到圖表</span></label>
                             <div class="grid grid-cols-2 gap-2">
                                 <button id="benefit" class="benefit-btn px-3 py-2 rounded border-2 border-green-500 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 hover:border-green-600 transition-colors text-base cursor-move select-none" draggable="true">
-                                    得益
+                                    <span id="benefitText">得益</span>
                                 </button>
                                 <button id="loss" class="benefit-btn px-3 py-2 rounded border-2 border-red-500 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 hover:border-red-600 transition-colors text-base cursor-move select-none" draggable="true">
-                                    損失
+                                    <span id="lossText">損失</span>
                                 </button>
                             </div>
-
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium mb-2"><span class="text-red-600 dark:text-red-400">任務4</span>：<span class="text-red-600 dark:text-red-400">拖拽到圖表</span></label>
+                            <label id="task4Label" class="block text-sm font-medium mb-2"><span class="text-red-600 dark:text-red-400">任務4</span>：<span class="text-red-600 dark:text-red-400">拖拽到圖表</span></label>
                             <div class="grid grid-cols-2 gap-2">
                                 <button id="lessThan" class="comparison-btn px-3 py-2 rounded border-2 border-blue-500 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 hover:border-blue-600 transition-colors text-base cursor-move select-none text-xl font-bold" draggable="true">
                                     &lt;
@@ -80,21 +89,20 @@
                                     &gt;
                                 </button>
                             </div>
-
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium mb-2"><span class="text-red-600 dark:text-red-400">任務5</span>：<span class="text-red-600 dark:text-red-400">提交</span></label>
+                            <label id="task5Label" class="block text-sm font-medium mb-2"><span class="text-red-600 dark:text-red-400">任務5</span>：<span class="text-red-600 dark:text-red-400">提交</span></label>
                             <button id="submitBtn" class="w-full bg-red-600 text-white px-3 py-2 rounded border-2 border-red-600 hover:bg-red-700 transition-colors text-base disabled:opacity-50 disabled:cursor-not-allowed">
-                                提交答案
+                                <span id="submitBtnText">提交答案</span>
                             </button>
                             <div id="submitFeedback" class="hidden mt-2 p-3 rounded-lg text-sm font-medium"></div>
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium mb-2"><span class="text-blue-600 dark:text-blue-400">重新開始</span></label>
+                            <label id="resetLabel" class="block text-sm font-medium mb-2"><span class="text-blue-600 dark:text-blue-400">重新開始</span></label>
                             <button id="resetBtn" class="w-full bg-gray-600 text-white px-3 py-2 rounded border-2 border-gray-600 hover:bg-gray-700 transition-colors text-base">
-                                重新整理
+                                <span id="resetBtnText">重新整理</span>
                             </button>
                         </div>
                     </div>
@@ -602,8 +610,7 @@
             }
             
             drawSingleDraggedLabel(x, y, type) {
-                if (!this.selectedPriceChange) return;
-                
+                // 移除对价格变化的依赖，让标签立即显示
                 this.ctx.save();
                 
                 // 計算對應區域的精確位置和尺寸
@@ -613,8 +620,10 @@
                     return;
                 }
                 
-                // 繪製答案標籤
-                const text = type === 'benefit' ? '得益' : '損失';
+                // 繪製答案標籤 - 根据语言显示
+                const text = type === 'benefit' ? 
+                    (languageManager.currentLang === 'en' ? languageManager.getText('gainText') : '得益') :
+                    (languageManager.currentLang === 'en' ? languageManager.getText('lossText') : '損失');
                 const bgColor = type === 'benefit' ? '#10B981' : '#EF4444';
                 const textColor = '#FFFFFF';
                 
@@ -657,7 +666,19 @@
             }
             
             calculateAreaPosition(type) {
-                if (!this.selectedPriceChange) return null;
+                // 如果没有选择价格变化，创建一个简单的默认显示区域
+                if (!this.selectedPriceChange) {
+                    // 在Canvas中心附近显示一个简单的标签
+                    const centerX = this.width / 2;
+                    const centerY = this.height / 2;
+                    
+                    return {
+                        x: centerX - 40 + (type === 'benefit' ? -50 : 50), // 左右分开显示
+                        y: centerY - 20,
+                        width: 80,
+                        height: 40
+                    };
+                }
                 
                 const priceChangeDirection = this.selectedPriceChange === 'increase' ? 1 : -1;
                 const newPrice = this.basePrice * (1 + priceChangeDirection * this.priceChangePercent);
@@ -734,9 +755,17 @@
             showDropConfirmation(type, zone) {
                 this.ctx.save();
                 
-                const typeText = type === 'benefit' ? '得益' : '損失';
-                const zoneText = zone === 'P1P2' ? 'P1-P2區域' : 'Q1-Q2區域';
-                const message = `已放置：${typeText} → ${zoneText}`;
+                // 根据语言显示文字
+                const typeText = type === 'benefit' ? 
+                    (languageManager.currentLang === 'en' ? languageManager.getText('gainText') : '得益') :
+                    (languageManager.currentLang === 'en' ? languageManager.getText('lossText') : '損失');
+                const zoneText = zone === 'P1P2' ? 
+                    (languageManager.currentLang === 'en' ? languageManager.getText('p1p2Area') : 'P1-P2區域') :
+                    (languageManager.currentLang === 'en' ? languageManager.getText('q1q2Area') : 'Q1-Q2區域');
+                
+                const message = languageManager.currentLang === 'en' ? 
+                    `Placed: ${typeText} → ${zoneText}` : 
+                    `已放置：${typeText} → ${zoneText}`;
                 const bgColor = '#3B82F6'; // 藍色，表示中性確認
                 
                 const boxX = this.width / 2 - 120;
@@ -768,7 +797,8 @@
             showDropError() {
                 this.ctx.save();
                 
-                const message = '請拖拽到P1-P2或Q1-Q2區域';
+                const message = languageManager.currentLang === 'en' ? 
+                    languageManager.getText('dropError') : '請拖拽到P1-P2或Q1-Q2區域';
                 const boxX = this.width / 2 - 100;
                 const boxY = 10;
                 const boxWidth = 200;
@@ -1036,11 +1066,12 @@
                 
                 this.ctx.stroke();
                 
-                // 標籤
-                this.ctx.fillText('價格', this.margin.left - 40, this.margin.top - 10);
-                this.ctx.fillText('數量', this.width - this.margin.right + 10, this.height - this.margin.bottom + 15);
+                // 標籤 - 根据语言显示
+                const priceLabel = languageManager.currentLang === 'en' ? languageManager.getText('axisPrice') : '價格';
+                const quantityLabel = languageManager.currentLang === 'en' ? languageManager.getText('axisQuantity') : '數量';
                 
-
+                this.ctx.fillText(priceLabel, this.margin.left - 40, this.margin.top - 10);
+                this.ctx.fillText(quantityLabel, this.width - this.margin.right + 10, this.height - this.margin.bottom + 15);
             }
             
             drawDemandLine() {
@@ -1433,9 +1464,9 @@
             drawHintBox() {
                 const isDark = document.documentElement.classList.contains('dark');
                 
-                // 計算提示框位置（圖表上方但確保可見）
-                const boxWidth = 200;
-                const boxHeight = 50;
+                // 計算提示框位置（圖表上方但確保可見）- 增大尺寸
+                const boxWidth = 280;
+                const boxHeight = 70;
                 const boxX = this.margin.left + (this.chartWidth - boxWidth) / 2;
                 const boxY = Math.max(5, this.margin.top - boxHeight + 5); // 確保距離頂部至少5px
                 
@@ -1453,13 +1484,16 @@
                 this.ctx.fill();
                 this.ctx.stroke();
                 
-                // 繪製文字
+                // 繪製文字 - 根据语言显示
                 this.ctx.fillStyle = isDark ? '#F3F4F6' : '#374151';
                 this.ctx.font = 'bold 16px sans-serif';
                 this.ctx.textAlign = 'center';
                 this.ctx.textBaseline = 'middle';
                 
-                this.ctx.fillText('改變需求曲線角度', boxX + boxWidth/2, boxY + boxHeight/2);
+                const hintText = languageManager.currentLang === 'en' ? 
+                    languageManager.getText('hintChangeAngle') : '改變需求曲線角度';
+                
+                this.ctx.fillText(hintText, boxX + boxWidth/2, boxY + boxHeight/2);
                 
                 // 重置設定
                 this.ctx.globalAlpha = 1;
@@ -2057,7 +2091,7 @@
                 this.ctx.fill();
                 this.ctx.stroke();
                 
-                // 繪製文字 "得益 _ 損失"
+                // 繪製文字 - 根据语言显示
                 this.ctx.fillStyle = isDark ? '#F3F4F6' : '#374151';
                 this.ctx.font = 'bold 14px sans-serif';
                 this.ctx.textAlign = 'center';
@@ -2065,9 +2099,13 @@
                 
                 const centerY = boxY + boxHeight / 2;
                 
-                // "得益" 文字 - 紅色
+                // 获取文字内容
+                const gainText = languageManager.currentLang === 'en' ? languageManager.getText('gainText') : '得益';
+                const lossText = languageManager.currentLang === 'en' ? languageManager.getText('lossText') : '損失';
+                
+                // "得益/Gain" 文字 - 紅色
                 this.ctx.fillStyle = '#EF4444'; // 紅色
-                this.ctx.fillText('得益', boxX + 25, centerY);
+                this.ctx.fillText(gainText, boxX + 25, centerY);
                 
                 // 比較符號位置
                 const symbolX = boxX + boxWidth / 2;
@@ -2081,10 +2119,10 @@
                     this.drawFlashingHint(symbolX, centerY);
                 }
                 
-                // "損失" 文字 - 紅色
+                // "損失/Loss" 文字 - 紅色
                 this.ctx.fillStyle = '#EF4444'; // 紅色
                 this.ctx.font = 'bold 14px sans-serif';
-                this.ctx.fillText('損失', boxX + boxWidth - 25, centerY);
+                this.ctx.fillText(lossText, boxX + boxWidth - 25, centerY);
                 
                 this.ctx.restore();
             }
@@ -2108,7 +2146,8 @@
             showComparisonDropConfirmation(symbol) {
                 this.ctx.save();
                 
-                const message = `已放置比較符號：${symbol}`;
+                const message = languageManager.currentLang === 'en' ? 
+                    `Placed comparison symbol: ${symbol}` : `已放置比較符號：${symbol}`;
                 const bgColor = '#10B981'; // 綠色，表示成功
                 
                 const boxX = this.width / 2 - 80;
@@ -2140,7 +2179,8 @@
             showComparisonDropError() {
                 this.ctx.save();
                 
-                const message = '請拖拽到圖表右上方的比較框中';
+                const message = languageManager.currentLang === 'en' ? 
+                    languageManager.getText('comparisonError') : '請拖拽到圖表右上方的比較框中';
                 const boxX = this.width / 2 - 120;
                 const boxY = this.margin.top + 60;
                 const boxWidth = 240;
@@ -2458,9 +2498,333 @@
             }
         }
         
+        // 语言管理类
+        class LanguageManager {
+            constructor() {
+                this.currentLang = 'zh'; // 默认中文
+                this.translations = {
+                    zh: {
+                        mainTitle: '需求價格彈性互動教學',
+                        task1Label: '<span class="text-red-600 dark:text-red-400">任務1</span>：<span class="text-red-600 dark:text-red-400">需求彈性類型</span>',
+                        task2Label: '<span class="text-red-600 dark:text-red-400">任務2</span>：<span class="text-red-600 dark:text-red-400">價格變化</span>',
+                        task3Label: '<span class="text-red-600 dark:text-red-400">任務3</span>：<span class="text-red-600 dark:text-red-400">拖拽到圖表</span>',
+                        task4Label: '<span class="text-red-600 dark:text-red-400">任務4</span>：<span class="text-red-600 dark:text-red-400">拖拽到圖表</span>',
+                        task5Label: '<span class="text-red-600 dark:text-red-400">任務5</span>：<span class="text-red-600 dark:text-red-400">提交</span>',
+                        resetLabel: '<span class="text-blue-600 dark:text-blue-400">重新開始</span>',
+                        highElasticText: '高彈性',
+                        lowElasticText: '低彈性',
+                        priceIncreaseText: '加價',
+                        priceDecreaseText: '減價',
+                        benefitText: '得益',
+                        lossText: '損失',
+                        submitBtnText: '提交答案',
+                        resetBtnText: '重新整理',
+                        task2Hint: '請先完成任務1：拖拽需求線改變彈性',
+                        quizTitle: '需求價格彈性練習題',
+                        quizLockTitle: '🔒 練習題尚未解鎖',
+                        quizLockDesc: '請先完成以下任務才能開始練習題：',
+                        highElasticTask: '任務組合1：高彈性情境',
+                        lowElasticTask: '任務組合2：低彈性情境',
+                        quizHint: '💡 提示：每種彈性類型都需要完成任務1-5的完整流程（選擇彈性類型→拖拽需求線→選擇價格變化→拖拽得益/損失→拖拽比較符號→提交答案）',
+                        highElasticIncomplete: '❌ 尚未完成高彈性的完整任務流程',
+                        lowElasticIncomplete: '❌ 尚未完成低彈性的完整任務流程',
+                        highElasticComplete: '✅ 已完成高彈性的完整任務流程',
+                        lowElasticComplete: '✅ 已完成低彈性的完整任務流程',
+                        quizUnlockTitle: '🎉 練習題已解鎖！',
+                        quizUnlockDesc: '恭喜您！已成功完成高彈性和低彈性的所有任務，現在可以開始練習題了。',
+                        totalScoreText: '完成所有題目後將顯示總分',
+                        resetQuizText: '重新作答'
+                    },
+                    en: {
+                        mainTitle: 'Interactive Teaching of Price Elasticity of Demand',
+                        task1Label: '<span class="text-red-600 dark:text-red-400">Task 1</span>: <span class="text-red-600 dark:text-red-400">Elasticity Type</span>',
+                        task2Label: '<span class="text-red-600 dark:text-red-400">Task 2</span>: <span class="text-red-600 dark:text-red-400">Price Change</span>',
+                        task3Label: '<span class="text-red-600 dark:text-red-400">Task 3</span>: <span class="text-red-600 dark:text-red-400">Drag to Chart</span>',
+                        task4Label: '<span class="text-red-600 dark:text-red-400">Task 4</span>: <span class="text-red-600 dark:text-red-400">Drag to Chart</span>',
+                        task5Label: '<span class="text-red-600 dark:text-red-400">Task 5</span>: <span class="text-red-600 dark:text-red-400">Submit</span>',
+                        resetLabel: '<span class="text-blue-600 dark:text-blue-400">Reset</span>',
+                        highElasticText: 'Elastic',
+                        lowElasticText: 'Inelastic',
+                        priceIncreaseText: 'Price Increase',
+                        priceDecreaseText: 'Price Decrease',
+                        benefitText: 'Gain',
+                        lossText: 'Loss',
+                        submitBtnText: 'Submit Answer',
+                        resetBtnText: 'Reset',
+                        task2Hint: '',
+                        quizTitle: 'Price Elasticity of Demand Quiz',
+                        quizLockTitle: '🔒 Quiz Not Yet Unlocked',
+                        quizLockDesc: 'Please complete the following tasks before starting the quiz:',
+                        highElasticTask: 'Task Set 1: Elastic Scenario',
+                        lowElasticTask: 'Task Set 2: Inelastic Scenario',
+                        quizHint: '💡 Hint: Each elasticity type requires completing the full Task 1-5 workflow (Select elasticity type → Drag demand line → Select price change → Drag gain/loss → Drag comparison symbol → Submit answer)',
+                        highElasticIncomplete: '❌ Elastic task workflow not completed',
+                        lowElasticIncomplete: '❌ Inelastic task workflow not completed',
+                        highElasticComplete: '✅ Elastic task workflow completed',
+                        lowElasticComplete: '✅ Inelastic task workflow completed',
+                        quizUnlockTitle: '🎉 Quiz Unlocked!',
+                        quizUnlockDesc: 'Congratulations! You have successfully completed all tasks for both elastic and inelastic scenarios. You can now start the quiz.',
+                        totalScoreText: 'Total score will be displayed after completing all questions',
+                        resetQuizText: 'Retake Quiz',
+                        // 结果面板翻译
+                        analysisResults: 'Analysis Results',
+                        priceChangeLabel: 'Price Change',
+                        quantityChangeLabel: 'Quantity Change', 
+                        revenueChangeLabel: 'Revenue Change',
+                        // 练习题翻译
+                        q1Title: 'Question 1: Basic Concept',
+                        q1Question: 'When the price elasticity of demand for a good is <strong>elastic</strong>, a price <strong>increase</strong> will lead to total revenue:',
+                        q1OptionA: 'Increase',
+                        q1OptionB: 'Decrease', 
+                        q1OptionC: 'Remain unchanged',
+                        q2Title: 'Question 2: Inelastic Scenario',
+                        q2Question: 'A certain medicine has <strong>inelastic</strong> price elasticity of demand. When the price <strong>falls by 15%</strong>, total revenue will:',
+                        q2OptionA: 'Increase',
+                        q2OptionB: 'Decrease',
+                        q2OptionC: 'Remain unchanged',
+                        q3Title: 'Question 3: Elasticity Coefficient Determination',
+                        q3Question: 'The price of a good falls from $100 to $80, and demand increases from 200 to 280 units. The price elasticity of demand for this good is:',
+                        q3OptionA: 'Elastic (elasticity coefficient absolute value > 1)',
+                        q3OptionB: 'Inelastic (elasticity coefficient absolute value < 1)',
+                        q3OptionC: 'Unit elastic (elasticity coefficient absolute value = 1)',
+                        q4Title: 'Question 4: Revenue Maximization',
+                        q4Question: 'A restaurant finds that the price elasticity of demand for its meals is <strong>elastic</strong>. If the restaurant wants to increase total revenue, the best strategy is:',
+                        q4OptionA: 'Raise prices',
+                        q4OptionB: 'Lower prices',
+                        q4OptionC: 'Maintain current prices',
+                        q5Title: 'Question 5: Practical Application',
+                        q5Question: 'After a luxury watch brand raised prices by 25%, sales decreased by 40%. Based on this data, it can be determined that:',
+                        q5OptionA: 'Total revenue increased, and demand is inelastic',
+                        q5OptionB: 'Total revenue decreased, and demand is elastic',
+                        q5OptionC: 'Total revenue remained unchanged, and demand is unit elastic',
+                        // Canvas图表内文字翻译
+                        axisPrice: 'Price',
+                        axisQuantity: 'Quantity',
+                        gainText: 'Gain',
+                        lossText: 'Loss',
+                        hintChangeAngle: 'Change demand curve angle',
+                        dropConfirmation: 'Placed: {type} → {zone}',
+                        dropError: 'Please drag to P1-P2 or Q1-Q2 area',
+                        comparisonConfirmation: 'Placed comparison symbol: {symbol}',
+                        comparisonError: 'Please drag to the comparison box at the top right of the chart',
+                        p1p2Area: 'P1-P2 Area',
+                        q1q2Area: 'Q1-Q2 Area'
+                    }
+                };
+                this.init();
+            }
+            
+            init() {
+                // 设置语言切换按钮事件
+                document.getElementById('langZh').addEventListener('click', () => {
+                    this.switchLanguage('zh');
+                });
+                
+                document.getElementById('langEn').addEventListener('click', () => {
+                    this.switchLanguage('en');
+                });
+            }
+            
+            switchLanguage(lang) {
+                this.currentLang = lang;
+                
+                // 更新语言按钮状态
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    btn.classList.remove('bg-primary', 'text-white');
+                    btn.classList.add('text-gray-600', 'dark:text-gray-400');
+                });
+                
+                const activeBtn = lang === 'zh' ? document.getElementById('langZh') : document.getElementById('langEn');
+                activeBtn.classList.add('bg-primary', 'text-white');
+                activeBtn.classList.remove('text-gray-600', 'dark:text-gray-400');
+                
+                // 更新页面内容
+                this.updateContent();
+                
+                // 触发Canvas重新绘制以更新语言
+                if (window.simulator) {
+                    window.simulator.drawChart();
+                }
+            }
+            
+            updateContent() {
+                const trans = this.translations[this.currentLang];
+                
+                // 更新基本元素
+                document.getElementById('mainTitle').textContent = trans.mainTitle;
+                document.getElementById('task1Label').innerHTML = trans.task1Label;
+                document.getElementById('task2Label').innerHTML = trans.task2Label;
+                document.getElementById('task3Label').innerHTML = trans.task3Label;
+                document.getElementById('task4Label').innerHTML = trans.task4Label;
+                document.getElementById('task5Label').innerHTML = trans.task5Label;
+                document.getElementById('resetLabel').innerHTML = trans.resetLabel;
+                
+                document.getElementById('highElasticText').textContent = trans.highElasticText;
+                document.getElementById('lowElasticText').textContent = trans.lowElasticText;
+                document.getElementById('priceIncreaseText').textContent = trans.priceIncreaseText;
+                document.getElementById('priceDecreaseText').textContent = trans.priceDecreaseText;
+                document.getElementById('benefitText').textContent = trans.benefitText;
+                document.getElementById('lossText').textContent = trans.lossText;
+                document.getElementById('submitBtnText').textContent = trans.submitBtnText;
+                document.getElementById('resetBtnText').textContent = trans.resetBtnText;
+                document.getElementById('task2Hint').textContent = trans.task2Hint;
+                
+                // 更新结果面板（如果存在）
+                const resultsTitle = document.querySelector('#resultsPanel h3');
+                if (resultsTitle && trans.analysisResults) {
+                    resultsTitle.textContent = trans.analysisResults;
+                }
+                
+                const priceChangeLabel = document.querySelector('#resultsPanel .font-medium');
+                if (priceChangeLabel && trans.priceChangeLabel) {
+                    priceChangeLabel.textContent = trans.priceChangeLabel;
+                }
+                
+                const quantityChangeLabel = document.querySelectorAll('#resultsPanel .font-medium')[1];
+                if (quantityChangeLabel && trans.quantityChangeLabel) {
+                    quantityChangeLabel.textContent = trans.quantityChangeLabel;
+                }
+                
+                const revenueChangeLabel = document.querySelectorAll('#resultsPanel .font-medium')[2];
+                if (revenueChangeLabel && trans.revenueChangeLabel) {
+                    revenueChangeLabel.textContent = trans.revenueChangeLabel;
+                }
+                
+                // 更新练习题部分
+                const quizElements = document.querySelectorAll('#quizSection h2')[0];
+                if (quizElements) quizElements.textContent = trans.quizTitle;
+                
+                const quizLockTitle = document.querySelector('#quizLockMessage h3');
+                if (quizLockTitle) quizLockTitle.textContent = trans.quizLockTitle;
+                
+                const quizLockDesc = document.querySelector('#quizLockMessage p');
+                if (quizLockDesc) quizLockDesc.textContent = trans.quizLockDesc;
+                
+                const highTaskDiv = document.querySelector('#quizLockMessage .font-medium');
+                if (highTaskDiv) highTaskDiv.textContent = trans.highElasticTask;
+                
+                const lowTaskDiv = document.querySelectorAll('#quizLockMessage .font-medium')[1];
+                if (lowTaskDiv) lowTaskDiv.textContent = trans.lowElasticTask;
+                
+                const hintP = document.querySelector('#quizLockMessage .mt-3');
+                if (hintP) hintP.textContent = trans.quizHint;
+                
+                // 更新练习题内容
+                this.updateQuizQuestions(trans);
+                
+                const totalScore = document.getElementById('totalScore');
+                if (totalScore && (totalScore.textContent.includes('完成所有題目後將顯示總分') || totalScore.textContent.includes('Total score will be displayed'))) {
+                    totalScore.textContent = trans.totalScoreText;
+                }
+                
+                document.getElementById('resetQuiz').textContent = trans.resetQuizText;
+                
+                // 更新进度显示（如果存在）
+                const highProgress = document.getElementById('highElasticProgress');
+                const lowProgress = document.getElementById('lowElasticProgress');
+                
+                if (highProgress) {
+                    if (highProgress.textContent.includes('❌')) {
+                        highProgress.textContent = trans.highElasticIncomplete;
+                    } else if (highProgress.textContent.includes('✅')) {
+                        highProgress.textContent = trans.highElasticComplete;
+                    }
+                }
+                
+                if (lowProgress) {
+                    if (lowProgress.textContent.includes('❌')) {
+                        lowProgress.textContent = trans.lowElasticIncomplete;
+                    } else if (lowProgress.textContent.includes('✅')) {
+                        lowProgress.textContent = trans.lowElasticComplete;
+                    }
+                }
+            }
+            
+            updateQuizQuestions(trans) {
+                // 只在英文模式下更新练习题
+                if (this.currentLang !== 'en') return;
+                
+                // 使用更精确的选择器来定位每道题目
+                const questionContainers = document.querySelectorAll('#quizSection .mb-6.p-4.bg-white');
+                
+                // 更新题目1
+                if (questionContainers[0] && trans.q1Title) {
+                    const h3 = questionContainers[0].querySelector('h3');
+                    const p = questionContainers[0].querySelector('p');
+                    const options = questionContainers[0].querySelectorAll('label span');
+                    
+                    if (h3) h3.textContent = trans.q1Title;
+                    if (p) p.innerHTML = trans.q1Question;
+                    if (options[0]) options[0].textContent = trans.q1OptionA;
+                    if (options[1]) options[1].textContent = trans.q1OptionB;
+                    if (options[2]) options[2].textContent = trans.q1OptionC;
+                }
+                
+                // 更新题目2
+                if (questionContainers[1] && trans.q2Title) {
+                    const h3 = questionContainers[1].querySelector('h3');
+                    const p = questionContainers[1].querySelector('p');
+                    const options = questionContainers[1].querySelectorAll('label span');
+                    
+                    if (h3) h3.textContent = trans.q2Title;
+                    if (p) p.innerHTML = trans.q2Question;
+                    if (options[0]) options[0].textContent = trans.q2OptionA;
+                    if (options[1]) options[1].textContent = trans.q2OptionB;
+                    if (options[2]) options[2].textContent = trans.q2OptionC;
+                }
+                
+                // 更新题目3
+                if (questionContainers[2] && trans.q3Title) {
+                    const h3 = questionContainers[2].querySelector('h3');
+                    const p = questionContainers[2].querySelector('p');
+                    const options = questionContainers[2].querySelectorAll('label span');
+                    
+                    if (h3) h3.textContent = trans.q3Title;
+                    if (p) p.innerHTML = trans.q3Question;
+                    if (options[0]) options[0].textContent = trans.q3OptionA;
+                    if (options[1]) options[1].textContent = trans.q3OptionB;
+                    if (options[2]) options[2].textContent = trans.q3OptionC;
+                }
+                
+                // 更新题目4
+                if (questionContainers[3] && trans.q4Title) {
+                    const h3 = questionContainers[3].querySelector('h3');
+                    const p = questionContainers[3].querySelector('p');
+                    const options = questionContainers[3].querySelectorAll('label span');
+                    
+                    if (h3) h3.textContent = trans.q4Title;
+                    if (p) p.innerHTML = trans.q4Question;
+                    if (options[0]) options[0].textContent = trans.q4OptionA;
+                    if (options[1]) options[1].textContent = trans.q4OptionB;
+                    if (options[2]) options[2].textContent = trans.q4OptionC;
+                }
+                
+                // 更新题目5
+                if (questionContainers[4] && trans.q5Title) {
+                    const h3 = questionContainers[4].querySelector('h3');
+                    const p = questionContainers[4].querySelector('p');
+                    const options = questionContainers[4].querySelectorAll('label span');
+                    
+                    if (h3) h3.textContent = trans.q5Title;
+                    if (p) p.innerHTML = trans.q5Question;
+                    if (options[0]) options[0].textContent = trans.q5OptionA;
+                    if (options[1]) options[1].textContent = trans.q5OptionB;
+                    if (options[2]) options[2].textContent = trans.q5OptionC;
+                }
+            }
+            
+            getText(key) {
+                return this.translations[this.currentLang][key] || key;
+            }
+        }
+        
+        // 全局语言管理器实例
+        let languageManager;
+        
         // 初始化應用程式
         window.addEventListener('load', () => {
-            new ElasticitySimulator('economicChart');
+            languageManager = new LanguageManager();
+            window.simulator = new ElasticitySimulator('economicChart');
             new QuizManager();
         });
     </script>
