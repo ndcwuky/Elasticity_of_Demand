@@ -1,0 +1,2468 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>需求價格彈性互動教學</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#5D5CDE'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <div class="container mx-auto p-4 max-w-6xl">
+        <div class="text-center mb-6">
+            <h1 class="text-3xl font-bold mb-2">需求價格彈性互動教學</h1>
+        </div>
+
+        <div class="grid lg:grid-cols-5 gap-6">
+            <!-- 情境選擇 - 移到左方 -->
+            <div class="lg:col-span-1">
+                <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2"><span class="text-red-600 dark:text-red-400">任務1</span>：<span class="text-red-600 dark:text-red-400">需求彈性類型</span></label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button id="highElastic" class="elasticity-btn px-3 py-2 rounded border-2 border-gray-300 dark:border-gray-600 hover:border-primary transition-colors text-base">
+                                    高彈性
+                                </button>
+                                <button id="lowElastic" class="elasticity-btn px-3 py-2 rounded border-2 border-gray-300 dark:border-gray-600 hover:border-primary transition-colors text-base">
+                                    低彈性
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-2"><span class="text-red-600 dark:text-red-400">任務2</span>：<span class="text-red-600 dark:text-red-400">價格變化</span></label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button id="priceIncrease" class="price-btn px-3 py-2 rounded border-2 border-gray-300 dark:border-gray-600 hover:border-primary transition-colors text-base">
+                                    加價
+                                </button>
+                                <button id="priceDecrease" class="price-btn px-3 py-2 rounded border-2 border-gray-300 dark:border-gray-600 hover:border-primary transition-colors text-base">
+                                    減價
+                                </button>
+                            </div>
+                            <div id="task2Hint" class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                                請先完成任務1：拖拽需求線改變彈性
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-2"><span class="text-red-600 dark:text-red-400">任務3</span>：<span class="text-red-600 dark:text-red-400">拖拽到圖表</span></label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button id="benefit" class="benefit-btn px-3 py-2 rounded border-2 border-green-500 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 hover:border-green-600 transition-colors text-base cursor-move select-none" draggable="true">
+                                    得益
+                                </button>
+                                <button id="loss" class="benefit-btn px-3 py-2 rounded border-2 border-red-500 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 hover:border-red-600 transition-colors text-base cursor-move select-none" draggable="true">
+                                    損失
+                                </button>
+                            </div>
+
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-2"><span class="text-red-600 dark:text-red-400">任務4</span>：<span class="text-red-600 dark:text-red-400">拖拽到圖表</span></label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button id="lessThan" class="comparison-btn px-3 py-2 rounded border-2 border-blue-500 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 hover:border-blue-600 transition-colors text-base cursor-move select-none text-xl font-bold" draggable="true">
+                                    &lt;
+                                </button>
+                                <button id="greaterThan" class="comparison-btn px-3 py-2 rounded border-2 border-purple-500 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 hover:border-purple-600 transition-colors text-base cursor-move select-none text-xl font-bold" draggable="true">
+                                    &gt;
+                                </button>
+                            </div>
+
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-2"><span class="text-red-600 dark:text-red-400">任務5</span>：<span class="text-red-600 dark:text-red-400">提交</span></label>
+                            <button id="submitBtn" class="w-full bg-red-600 text-white px-3 py-2 rounded border-2 border-red-600 hover:bg-red-700 transition-colors text-base disabled:opacity-50 disabled:cursor-not-allowed">
+                                提交答案
+                            </button>
+                            <div id="submitFeedback" class="hidden mt-2 p-3 rounded-lg text-sm font-medium"></div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-2"><span class="text-blue-600 dark:text-blue-400">重新開始</span></label>
+                            <button id="resetBtn" class="w-full bg-gray-600 text-white px-3 py-2 rounded border-2 border-gray-600 hover:bg-gray-700 transition-colors text-base">
+                                重新整理
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 圖表區域 -->
+            <div class="lg:col-span-4">
+                <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+                    <canvas id="economicChart" width="600" height="400" class="w-full h-auto border border-gray-300 dark:border-gray-600 rounded"></canvas>
+                </div>
+                
+                <!-- 結果顯示區域 -->
+                <div id="resultsPanel" class="hidden bg-gray-50 dark:bg-gray-800 rounded-lg p-4 mt-4">
+                    <h3 class="text-lg font-semibold mb-4">分析結果</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                        <div class="bg-blue-100 dark:bg-blue-900 p-3 rounded">
+                            <div class="font-medium">價格變化</div>
+                            <div id="priceChange" class="text-lg font-bold text-blue-600 dark:text-blue-400">--</div>
+                        </div>
+                        <div class="bg-green-100 dark:bg-green-900 p-3 rounded">
+                            <div class="font-medium">需求量變化</div>
+                            <div id="quantityChange" class="text-lg font-bold text-green-600 dark:text-green-400">--</div>
+                        </div>
+                        <div class="bg-purple-100 dark:bg-purple-900 p-3 rounded">
+                            <div class="font-medium">收入變化</div>
+                            <div id="revenueChange" class="text-lg font-bold text-purple-600 dark:text-purple-400">--</div>
+                        </div>
+                    </div>
+                    <div id="explanation" class="mt-4 p-3 bg-yellow-100 dark:bg-yellow-900 rounded text-sm"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 練習題區域 -->
+        <div class="mt-8">
+            <div id="quizSection" class="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
+                <h2 class="text-2xl font-bold mb-6 text-center">需求價格彈性練習題</h2>
+                
+                <!-- 練習題解鎖提示 -->
+                <div id="quizLockMessage" class="mb-6 p-4 bg-yellow-100 dark:bg-yellow-900 rounded-lg border-l-4 border-yellow-500">
+                    <h3 class="text-lg font-semibold mb-2 text-yellow-800 dark:text-yellow-200">🔒 練習題尚未解鎖</h3>
+                    <div class="text-yellow-700 dark:text-yellow-300">
+                        <p class="mb-2">請先完成以下任務才能開始練習題：</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div class="bg-yellow-50 dark:bg-yellow-800 p-3 rounded">
+                                <div class="font-medium">任務組合1：高彈性情境</div>
+                                <div id="highElasticProgress" class="mt-1 text-xs">
+                                    ❌ 尚未完成高彈性的完整任務流程
+                                </div>
+                            </div>
+                            <div class="bg-yellow-50 dark:bg-yellow-800 p-3 rounded">
+                                <div class="font-medium">任務組合2：低彈性情境</div>
+                                <div id="lowElasticProgress" class="mt-1 text-xs">
+                                    ❌ 尚未完成低彈性的完整任務流程
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mt-3 text-xs">💡 提示：每種彈性類型都需要完成任務1-5的完整流程（選擇彈性類型→拖拽需求線→選擇價格變化→拖拽得益/損失→拖拽比較符號→提交答案）</p>
+                    </div>
+                </div>
+                
+                <!-- 題目1 -->
+                <div class="mb-6 p-4 bg-white dark:bg-gray-700 rounded-lg border-l-4 border-blue-500">
+                    <h3 class="text-lg font-semibold mb-3">題目1：基本概念</h3>
+                    <p class="mb-4">當商品的需求價格彈性為<strong>高彈性</strong>時，價格<strong>上漲</strong>會導致總收入：</p>
+                    <div class="space-y-2">
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="radio" name="q1" value="increase" class="text-primary focus:ring-primary">
+                            <span>增加</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="radio" name="q1" value="decrease" class="text-primary focus:ring-primary">
+                            <span>減少</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="radio" name="q1" value="unchanged" class="text-primary focus:ring-primary">
+                            <span>不變</span>
+                        </label>
+                    </div>
+                    <div id="feedback1" class="hidden mt-3 p-3 rounded-lg text-sm"></div>
+                </div>
+
+                <!-- 題目2 -->
+                <div class="mb-6 p-4 bg-white dark:bg-gray-700 rounded-lg border-l-4 border-green-500">
+                    <h3 class="text-lg font-semibold mb-3">題目2：低彈性情境</h3>
+                    <p class="mb-4">某種藥品的需求價格彈性為<strong>低彈性</strong>，當價格<strong>下跌15%</strong>時，總收入會：</p>
+                    <div class="space-y-2">
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="radio" name="q2" value="increase" class="text-primary focus:ring-primary">
+                            <span>增加</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="radio" name="q2" value="decrease" class="text-primary focus:ring-primary">
+                            <span>減少</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="radio" name="q2" value="unchanged" class="text-primary focus:ring-primary">
+                            <span>不變</span>
+                        </label>
+                    </div>
+                    <div id="feedback2" class="hidden mt-3 p-3 rounded-lg text-sm"></div>
+                </div>
+
+                <!-- 題目3 -->
+                <div class="mb-6 p-4 bg-white dark:bg-gray-700 rounded-lg border-l-4 border-purple-500">
+                    <h3 class="text-lg font-semibold mb-3">題目3：彈性係數判斷</h3>
+                    <p class="mb-4">某商品價格從100元降到80元，需求量從200個增加到280個。該商品的需求價格彈性屬於：</p>
+                    <div class="space-y-2">
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="radio" name="q3" value="high" class="text-primary focus:ring-primary">
+                            <span>高彈性（彈性係數絕對值 > 1）</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="radio" name="q3" value="low" class="text-primary focus:ring-primary">
+                            <span>低彈性（彈性係數絕對值 < 1）</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="radio" name="q3" value="unit" class="text-primary focus:ring-primary">
+                            <span>單位彈性（彈性係數絕對值 = 1）</span>
+                        </label>
+                    </div>
+                    <div id="feedback3" class="hidden mt-3 p-3 rounded-lg text-sm"></div>
+                </div>
+
+                <!-- 題目4 -->
+                <div class="mb-6 p-4 bg-white dark:bg-gray-700 rounded-lg border-l-4 border-orange-500">
+                    <h3 class="text-lg font-semibold mb-3">題目4：總收入最大化</h3>
+                    <p class="mb-4">一家餐廳發現其餐點的需求價格彈性為<strong>高彈性</strong>。如果餐廳想要增加總收入，最佳策略是：</p>
+                    <div class="space-y-2">
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="radio" name="q4" value="increase" class="text-primary focus:ring-primary">
+                            <span>提高價格</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="radio" name="q4" value="decrease" class="text-primary focus:ring-primary">
+                            <span>降低價格</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="radio" name="q4" value="unchanged" class="text-primary focus:ring-primary">
+                            <span>維持目前價格</span>
+                        </label>
+                    </div>
+                    <div id="feedback4" class="hidden mt-3 p-3 rounded-lg text-sm"></div>
+                </div>
+
+                <!-- 題目5 -->
+                <div class="mb-6 p-4 bg-white dark:bg-gray-700 rounded-lg border-l-4 border-red-500">
+                    <h3 class="text-lg font-semibold mb-3">題目5：實際應用</h3>
+                    <p class="mb-4">某奢侈品牌手錶的價格上漲25%後，銷量下降了40%。根據這些數據，可以判斷：</p>
+                    <div class="space-y-2">
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="radio" name="q5" value="revenue_increase" class="text-primary focus:ring-primary">
+                            <span>總收入增加，且需求為低彈性</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="radio" name="q5" value="revenue_decrease" class="text-primary focus:ring-primary">
+                            <span>總收入減少，且需求為高彈性</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="radio" name="q5" value="revenue_unchanged" class="text-primary focus:ring-primary">
+                            <span>總收入不變，且需求為單位彈性</span>
+                        </label>
+                    </div>
+                    <div id="feedback5" class="hidden mt-3 p-3 rounded-lg text-sm"></div>
+                </div>
+
+                <!-- 總分顯示 -->
+                <div class="mt-6 p-4 bg-blue-50 dark:bg-blue-900 rounded-lg text-center">
+                    <div id="totalScore" class="text-lg font-semibold text-blue-800 dark:text-blue-200">
+                        完成所有題目後將顯示總分
+                    </div>
+                    <button id="resetQuiz" class="mt-3 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+                        重新作答
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 深色模式支援
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+
+        class ElasticitySimulator {
+            constructor(canvasId) {
+                this.canvas = document.getElementById(canvasId);
+                this.ctx = this.canvas.getContext('2d');
+                this.width = this.canvas.width;
+                this.height = this.canvas.height;
+                
+                // 圖表參數
+                this.margin = { top: 40, right: 40, bottom: 60, left: 60 };
+                this.chartWidth = this.width - this.margin.left - this.margin.right;
+                this.chartHeight = this.height - this.margin.top - this.margin.bottom;
+                
+                // 狀態
+                this.selectedElasticity = null; // 'high' or 'low'
+                this.selectedPriceChange = null; // 'increase' or 'decrease'
+                this.selectedBenefit = null; // 'benefit' or 'loss'
+                this.prediction = null; // 'up', 'same', 'down'
+                this.isDragging = false;
+                this.dragPoint = null;
+                this.hasModifiedDemandLine = false; // 跟踪是否已修改需求線
+                
+                // 完成追踪狀態
+                this.completedTasks = {
+                    high: false,  // 是否完成過高彈性的完整任務流程
+                    low: false    // 是否完成過低彈性的完整任務流程
+                };
+                
+                // 提示框狀態
+                this.showHint = false;
+                this.hintOpacity = 1;
+                this.hintInterval = null;
+                
+                // 經濟參數
+                this.basePrice = 50;
+                this.baseQuantity = 40;
+                this.priceChangePercent = 0.2; // 20%
+                this.demandSlope = -1.0; // 初始45度需求線斜率
+                this.demandIntercept = 90; // 需求線截距
+                
+                this.scenarios = {
+                    high: { elasticity: -2.0, demandSlope: -0.8 }, // 高彈性
+                    low: { elasticity: -0.4, demandSlope: -3.0 }   // 低彈性
+                };
+                
+                // 拖拽狀態
+                this.isDraggedToCanvas = false;
+                this.draggedType = null;
+                this.draggedPositions = {}; // 存儲多個拖拽位置 {benefit: {x, y}, loss: {x, y}}
+                
+                // 任務4狀態
+                this.selectedComparison = null; // '<' or '>'
+                this.isComparisonDraggedToCanvas = false;
+                
+                this.init();
+            }
+            
+            init() {
+                this.drawChart();
+                this.setupEventListeners();
+                this.setupCanvasEvents();
+                this.setupDragAndDrop();
+                this.updateSimulateButton();
+                this.updateElasticityDisplay();
+                this.updateTaskAvailability(); // 初始化任务可用性
+            }
+            
+            setupEventListeners() {
+                // 彈性選擇按鈕
+                document.getElementById('highElastic').addEventListener('click', () => {
+                    this.selectElasticity('high');
+                });
+                
+                document.getElementById('lowElastic').addEventListener('click', () => {
+                    this.selectElasticity('low');
+                });
+                
+                // 價格變化按鈕
+                document.getElementById('priceIncrease').addEventListener('click', () => {
+                    this.selectPriceChange('increase');
+                });
+                
+                document.getElementById('priceDecrease').addEventListener('click', () => {
+                    this.selectPriceChange('decrease');
+                });
+
+
+                
+                // 提交按鈕
+                document.getElementById('submitBtn').addEventListener('click', () => {
+                    this.submitAnswer();
+                });
+                
+                // 重新整理按鈕
+                document.getElementById('resetBtn').addEventListener('click', () => {
+                    this.resetAll();
+                });
+            }
+            
+            setupDragAndDrop() {
+                // 拖拽事件監聽器
+                document.getElementById('benefit').addEventListener('dragstart', (e) => {
+                    this.handleDragStart(e, 'benefit');
+                });
+                
+                document.getElementById('loss').addEventListener('dragstart', (e) => {
+                    this.handleDragStart(e, 'loss');
+                });
+                
+                // 任務4比較符號拖拽
+                document.getElementById('lessThan').addEventListener('dragstart', (e) => {
+                    this.handleDragStart(e, 'lessThan');
+                });
+                
+                document.getElementById('greaterThan').addEventListener('dragstart', (e) => {
+                    this.handleDragStart(e, 'greaterThan');
+                });
+                
+                // Canvas作為拖拽目標
+                this.canvas.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    this.canvas.style.cursor = 'copy';
+                });
+                
+                this.canvas.addEventListener('dragleave', (e) => {
+                    this.canvas.style.cursor = 'default';
+                });
+                
+                this.canvas.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    this.canvas.style.cursor = 'default';
+                    this.handleDrop(e);
+                });
+            }
+            
+            handleDragStart(e, type) {
+                this.draggedType = type;
+                // 設置拖拽數據
+                e.dataTransfer.setData('text/plain', type);
+                e.dataTransfer.effectAllowed = 'copy';
+                
+                // 添加拖拽時的視覺效果
+                setTimeout(() => {
+                    e.target.style.opacity = '0.5';
+                }, 0);
+            }
+            
+            handleDrop(e) {
+                const draggedType = e.dataTransfer.getData('text/plain');
+                
+                // 恢復拖拽元素的透明度
+                const draggedElement = document.getElementById(draggedType);
+                draggedElement.style.opacity = '1';
+                
+                // 獲取拖拽位置
+                const rect = this.canvas.getBoundingClientRect();
+                const scaleX = this.canvas.width / rect.width;
+                const scaleY = this.canvas.height / rect.height;
+                const canvasX = (e.clientX - rect.left) * scaleX;
+                const canvasY = (e.clientY - rect.top) * scaleY;
+                
+                // 任務4：比較符號拖拽處理
+                if (draggedType === 'lessThan' || draggedType === 'greaterThan') {
+                    // 檢查是否放在比較框區域
+                    const comparisonZone = this.getComparisonDropZone(canvasX, canvasY);
+                    
+                    if (comparisonZone) {
+                        // 成功放置在比較框中
+                        this.selectedComparison = draggedType === 'lessThan' ? '<' : '>';
+                        this.isComparisonDraggedToCanvas = true;
+                        
+                        // 更新任務可用性
+                        this.updateTaskAvailability();
+                        
+                        // 重新繪製圖表以顯示比較符號
+                        this.drawChart();
+                        
+                        // 提供放置確認反饋
+                        this.showComparisonDropConfirmation(this.selectedComparison);
+                    } else {
+                        // 放錯地方
+                        this.showComparisonDropError();
+                    }
+                    return;
+                }
+                
+                // 任務3：得益/損失拖拽處理（原有邏輯）
+                if (draggedType === 'benefit' || draggedType === 'loss') {
+                    // 檢查是否放在P1-P2或Q1-Q2區域
+                    const dropZone = this.getDropZone(canvasX, canvasY);
+                    
+                    if (dropZone) {
+                        // 成功放置在有效區域（允許放置在任何區域，包括錯誤的）
+                        this.selectedBenefit = draggedType;
+                        this.isDraggedToCanvas = true;
+                        
+                        // 記錄學生實際選擇的區域
+                        this.studentDropZone = dropZone;
+                        
+                        // 更新視覺反饋
+                        this.updateDraggedVisualization(canvasX, canvasY, draggedType, dropZone);
+                        
+                        // 更新任務可用性
+                        this.updateTaskAvailability();
+                        
+                        // 提供放置確認反饋（不顯示對錯）
+                        this.showDropConfirmation(draggedType, dropZone);
+                    } else {
+                        // 完全放錯地方（不在任何指定區域）
+                        this.showDropError();
+                    }
+                }
+            }
+            
+            getDropZone(canvasX, canvasY) {
+                if (!this.selectedPriceChange) return null;
+                
+                // 計算P1-P2和Q1-Q2區域
+                const priceChangeDirection = this.selectedPriceChange === 'increase' ? 1 : -1;
+                const newPrice = this.basePrice * (1 + priceChangeDirection * this.priceChangePercent);
+                
+                // 計算Q2位置
+                let q2QuantityOnDemandLine;
+                if (Math.abs(this.demandSlope) < 0.001) {
+                    q2QuantityOnDemandLine = this.baseQuantity;
+                } else {
+                    q2QuantityOnDemandLine = (newPrice - this.demandIntercept) / this.demandSlope;
+                    q2QuantityOnDemandLine = Math.max(0, Math.min(80, q2QuantityOnDemandLine));
+                }
+                
+                // P1-P2區域（價格變化區域 - Y軸左側的水平區域）
+                const p1p2ZoneX1 = this.margin.left + 10;
+                const p1p2ZoneX2 = Math.max(
+                    this.toCanvasX(Math.min(this.baseQuantity, q2QuantityOnDemandLine)) - 10,
+                    p1p2ZoneX1 + 80  // 確保最小寬度80px
+                );
+                const p1p2ZoneY1 = Math.min(this.toCanvasY(this.basePrice), this.toCanvasY(newPrice)) - 15;
+                const p1p2ZoneY2 = Math.max(
+                    Math.max(this.toCanvasY(this.basePrice), this.toCanvasY(newPrice)) + 15,
+                    p1p2ZoneY1 + 40  // 確保最小高度40px
+                );
+                
+                // Q1-Q2區域（數量變化區域 - Q1和Q2垂直虛線之間的矩形區域）
+                const q1q2BaseX1 = Math.min(this.toCanvasX(this.baseQuantity), this.toCanvasX(q2QuantityOnDemandLine));
+                const q1q2BaseX2 = Math.max(this.toCanvasX(this.baseQuantity), this.toCanvasX(q2QuantityOnDemandLine));
+                
+                // 確保Q1-Q2區域有最小寬度
+                const q1q2MinWidth = 60; // 最小寬度60px
+                const q1q2ActualWidth = q1q2BaseX2 - q1q2BaseX1;
+                
+                let q1q2ZoneX1, q1q2ZoneX2;
+                if (q1q2ActualWidth < q1q2MinWidth) {
+                    // 如果實際寬度太小，以Q1為中心擴展
+                    const centerX = this.toCanvasX(this.baseQuantity);
+                    q1q2ZoneX1 = centerX - q1q2MinWidth / 2;
+                    q1q2ZoneX2 = centerX + q1q2MinWidth / 2;
+                } else {
+                    q1q2ZoneX1 = q1q2BaseX1 + 5;
+                    q1q2ZoneX2 = q1q2BaseX2 - 5;
+                }
+                
+                const q1q2ZoneY1 = this.toCanvasY(Math.max(this.basePrice, newPrice)) + 10; // 從較高價格線下方開始
+                const q1q2ZoneY2 = this.height - this.margin.bottom - 10; // 到X軸上方結束
+                
+                // 檢查是否在P1-P2區域
+                if (canvasX >= p1p2ZoneX1 && canvasX <= p1p2ZoneX2 && 
+                    canvasY >= p1p2ZoneY1 && canvasY <= p1p2ZoneY2) {
+                    return 'P1P2';
+                }
+                
+                // 檢查是否在Q1-Q2區域（確保有最小寬度）
+                if (q1q2ZoneX2 > q1q2ZoneX1 && // 確保有寬度
+                    canvasX >= q1q2ZoneX1 && canvasX <= q1q2ZoneX2 && 
+                    canvasY >= q1q2ZoneY1 && canvasY <= q1q2ZoneY2) {
+                    return 'Q1Q2';
+                }
+                
+                return null;
+            }
+            
+            validateDropZone(draggedType, dropZone) {
+                // 根據經濟學理論驗證拖拽是否正確
+                // 在加價情況下：得益 -> P1-P2區域，損失 -> Q1-Q2區域
+                // 在減價情況下：得益 -> Q1-Q2區域，損失 -> P1-P2區域
+                
+                if (this.selectedPriceChange === 'increase') {
+                    // 加價：得益在P1-P2，損失在Q1-Q2
+                    return (draggedType === 'benefit' && dropZone === 'P1P2') ||
+                           (draggedType === 'loss' && dropZone === 'Q1Q2');
+                } else {
+                    // 減價：得益在Q1-Q2，損失在P1-P2
+                    return (draggedType === 'benefit' && dropZone === 'Q1Q2') ||
+                           (draggedType === 'loss' && dropZone === 'P1P2');
+                }
+            }
+            
+            updateDraggedVisualization(x, y, type, dropZone) {
+                // 儲存拖拽位置、類型和學生實際選擇的區域
+                this.draggedPositions[type] = { x, y, zone: dropZone };
+                
+                // 重新繪製圖表（會自動包含所有拖拽標籤）
+                this.drawChart();
+            }
+            
+            drawDraggedLabels() {
+                // 繪製所有已拖拽的標籤
+                for (const [type, position] of Object.entries(this.draggedPositions)) {
+                    if (position) {
+                        this.drawSingleDraggedLabel(position.x, position.y, type);
+                    }
+                }
+            }
+            
+            drawSingleDraggedLabel(x, y, type) {
+                if (!this.selectedPriceChange) return;
+                
+                this.ctx.save();
+                
+                // 計算對應區域的精確位置和尺寸
+                const areaInfo = this.calculateAreaPosition(type);
+                if (!areaInfo) {
+                    this.ctx.restore();
+                    return;
+                }
+                
+                // 繪製答案標籤
+                const text = type === 'benefit' ? '得益' : '損失';
+                const bgColor = type === 'benefit' ? '#10B981' : '#EF4444';
+                const textColor = '#FFFFFF';
+                
+                // 使用精確計算的位置和尺寸
+                const rectX = areaInfo.x;
+                const rectY = areaInfo.y;
+                const rectWidth = areaInfo.width;
+                const rectHeight = areaInfo.height;
+                
+                // 繪製背景矩形（精確覆蓋虛線區域）
+                this.ctx.fillStyle = bgColor;
+                this.ctx.globalAlpha = 0.7; // 半透明效果
+                
+                this.ctx.beginPath();
+                this.roundRect(rectX, rectY, rectWidth, rectHeight, 6);
+                this.ctx.fill();
+                
+                // 繪製邊框
+                this.ctx.globalAlpha = 1;
+                this.ctx.strokeStyle = bgColor;
+                this.ctx.lineWidth = 2;
+                this.ctx.stroke();
+                
+                // 繪製文字（在矩形中心）
+                this.ctx.fillStyle = textColor;
+                this.ctx.globalAlpha = 1;
+                
+                // 根據矩形大小調整字體
+                const fontSize = Math.min(rectWidth / 6, rectHeight / 3, 16);
+                this.ctx.font = `bold ${fontSize}px sans-serif`;
+                this.ctx.textAlign = 'center';
+                this.ctx.textBaseline = 'middle';
+                
+                // 文字位置在矩形中心
+                const textX = rectX + rectWidth / 2;
+                const textY = rectY + rectHeight / 2;
+                this.ctx.fillText(text, textX, textY);
+                
+                this.ctx.restore();
+            }
+            
+            calculateAreaPosition(type) {
+                if (!this.selectedPriceChange) return null;
+                
+                const priceChangeDirection = this.selectedPriceChange === 'increase' ? 1 : -1;
+                const newPrice = this.basePrice * (1 + priceChangeDirection * this.priceChangePercent);
+                
+                // 計算Q2位置
+                let q2QuantityOnDemandLine;
+                if (Math.abs(this.demandSlope) < 0.001) {
+                    q2QuantityOnDemandLine = this.baseQuantity;
+                } else {
+                    q2QuantityOnDemandLine = (newPrice - this.demandIntercept) / this.demandSlope;
+                    q2QuantityOnDemandLine = Math.max(0, Math.min(80, q2QuantityOnDemandLine));
+                }
+                
+                // 根據學生實際拖拽到的區域來確定位置
+                let targetZone = null;
+                if (this.draggedPositions[type] && this.draggedPositions[type].zone) {
+                    targetZone = this.draggedPositions[type].zone;
+                } else {
+                    // 如果沒有拖拽記錄，使用經濟學理論作為預設
+                    if (this.selectedPriceChange === 'increase') {
+                        targetZone = (type === 'benefit') ? 'P1P2' : 'Q1Q2';
+                    } else {
+                        targetZone = (type === 'benefit') ? 'Q1Q2' : 'P1P2';
+                    }
+                }
+                
+                if (targetZone === 'P1P2') {
+                    // P1-P2區域：面積始終為 Q_min * |P1-P2|
+                    const p1p2X = this.margin.left;
+                    const p1p2Y = Math.min(this.toCanvasY(this.basePrice), this.toCanvasY(newPrice));
+                    const p1p2Width = this.toCanvasX(Math.min(this.baseQuantity, q2QuantityOnDemandLine)) - this.margin.left;
+                    const p1p2Height = Math.abs(this.toCanvasY(this.basePrice) - this.toCanvasY(newPrice));
+                    
+                    return {
+                        x: p1p2X,
+                        y: p1p2Y,
+                        width: Math.max(p1p2Width, 40),
+                        height: Math.max(p1p2Height, 20)
+                    };
+                } else {
+                    // Q1-Q2區域：嚴格等於虛線長方形，不人為擴大寬度
+                    const q1q2X = Math.min(this.toCanvasX(this.baseQuantity), this.toCanvasX(q2QuantityOnDemandLine));
+                    const q1q2Width = Math.abs(this.toCanvasX(this.baseQuantity) - this.toCanvasX(q2QuantityOnDemandLine));
+                    
+                    // 如果Q1-Q2距離太小，不強制繪製矩形
+                    if (q1q2Width < 3) {
+                        return null; // 距離太小時不繪製
+                    }
+                    
+                    // 確保矩形面積精確等於虛線長方形：寬度 × 高度 = |Q1-Q2| × 價格
+                    let targetPrice, q1q2Y, q1q2HeightPixels;
+                    
+                    if (this.selectedPriceChange === 'increase') {
+                        // 加價時：面積 = P1 × |Q1-Q2|
+                        targetPrice = this.basePrice; // P1
+                        q1q2HeightPixels = this.toCanvasY(0) - this.toCanvasY(targetPrice);
+                        q1q2Y = this.toCanvasY(0) - q1q2HeightPixels;
+                    } else {
+                        // 減價時：面積 = P2 × |Q2-Q1|  
+                        targetPrice = newPrice; // P2
+                        q1q2HeightPixels = this.toCanvasY(0) - this.toCanvasY(targetPrice);
+                        q1q2Y = this.toCanvasY(0) - q1q2HeightPixels;
+                    }
+                    
+                    return {
+                        x: q1q2X,
+                        y: q1q2Y,
+                        width: q1q2Width, // 嚴格使用實際寬度，不設最小值
+                        height: q1q2HeightPixels // 嚴格使用實際高度，不設最小值
+                    };
+                }
+            }
+            
+            showDropConfirmation(type, zone) {
+                this.ctx.save();
+                
+                const typeText = type === 'benefit' ? '得益' : '損失';
+                const zoneText = zone === 'P1P2' ? 'P1-P2區域' : 'Q1-Q2區域';
+                const message = `已放置：${typeText} → ${zoneText}`;
+                const bgColor = '#3B82F6'; // 藍色，表示中性確認
+                
+                const boxX = this.width / 2 - 120;
+                const boxY = 10;
+                const boxWidth = 240;
+                const boxHeight = 30;
+                
+                // 背景
+                this.ctx.fillStyle = bgColor;
+                this.ctx.beginPath();
+                this.roundRect(boxX, boxY, boxWidth, boxHeight, 8);
+                this.ctx.fill();
+                
+                // 文字
+                this.ctx.fillStyle = '#FFFFFF';
+                this.ctx.font = 'bold 12px sans-serif';
+                this.ctx.textAlign = 'center';
+                this.ctx.textBaseline = 'middle';
+                this.ctx.fillText(message, this.width / 2, boxY + boxHeight / 2);
+                
+                this.ctx.restore();
+                
+                // 2秒後清除訊息
+                setTimeout(() => {
+                    this.drawChart();
+                }, 2000);
+            }
+            
+            showDropError() {
+                this.ctx.save();
+                
+                const message = '請拖拽到P1-P2或Q1-Q2區域';
+                const boxX = this.width / 2 - 100;
+                const boxY = 10;
+                const boxWidth = 200;
+                const boxHeight = 30;
+                
+                // 背景
+                this.ctx.fillStyle = '#EF4444';
+                this.ctx.beginPath();
+                this.roundRect(boxX, boxY, boxWidth, boxHeight, 8);
+                this.ctx.fill();
+                
+                // 文字
+                this.ctx.fillStyle = '#FFFFFF';
+                this.ctx.font = 'bold 11px sans-serif';
+                this.ctx.textAlign = 'center';
+                this.ctx.textBaseline = 'middle';
+                this.ctx.fillText(message, this.width / 2, boxY + boxHeight / 2);
+                
+                this.ctx.restore();
+                
+                // 2秒後清除訊息
+                setTimeout(() => {
+                    this.drawChart();
+                }, 2000);
+            }
+            
+            getCorrectZone(type) {
+                if (this.selectedPriceChange === 'increase') {
+                    return type === 'benefit' ? 'P1-P2區域' : 'Q1-Q2區域';
+                } else {
+                    return type === 'benefit' ? 'Q1-Q2區域' : 'P1-P2區域';
+                }
+            }
+            
+
+            
+            setupCanvasEvents() {
+                // 鼠標事件
+                this.canvas.addEventListener('mousedown', (e) => this.handleStart(e));
+                this.canvas.addEventListener('mousemove', (e) => this.handleMove(e));
+                this.canvas.addEventListener('mouseup', (e) => this.handleEnd(e));
+                this.canvas.addEventListener('mouseleave', (e) => this.handleEnd(e));
+                
+                // 觸摸事件
+                this.canvas.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    this.handleStart(e.touches[0]);
+                });
+                this.canvas.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+                    this.handleMove(e.touches[0]);
+                });
+                this.canvas.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    this.handleEnd(e);
+                });
+            }
+            
+            getEventPos(e) {
+                const rect = this.canvas.getBoundingClientRect();
+                const scaleX = this.canvas.width / rect.width;
+                const scaleY = this.canvas.height / rect.height;
+                
+                return {
+                    x: (e.clientX - rect.left) * scaleX,
+                    y: (e.clientY - rect.top) * scaleY
+                };
+            }
+            
+            handleStart(e) {
+                const pos = this.getEventPos(e);
+                
+                // 檢查是否點擊在需求線附近
+                if (this.isNearDemandLine(pos.x, pos.y)) {
+                    this.isDragging = true;
+                    this.dragPoint = pos;
+                    this.canvas.style.cursor = 'grabbing';
+                    
+                    // 開始拖拽時隱藏提示框
+                    this.hideHint();
+                }
+            }
+            
+            handleMove(e) {
+                const pos = this.getEventPos(e);
+                
+                if (this.isDragging) {
+                    // 計算新的斜率
+                    this.updateDemandSlope(pos);
+                    this.drawChart();
+                    this.updateElasticityDisplay();
+                } else {
+                    // 檢查是否在需求線附近，改變游標
+                    if (this.isNearDemandLine(pos.x, pos.y)) {
+                        this.canvas.style.cursor = 'grab';
+                    } else {
+                        this.canvas.style.cursor = 'default';
+                    }
+                }
+            }
+            
+            handleEnd(e) {
+                if (this.isDragging) {
+                    // 标记需求线已被修改，启用任务2
+                    this.hasModifiedDemandLine = true;
+                    this.updateTaskAvailability();
+                }
+                this.isDragging = false;
+                this.dragPoint = null;
+                this.canvas.style.cursor = 'default';
+            }
+            
+            isNearDemandLine(canvasX, canvasY) {
+                // 轉換到經濟座標
+                const economicX = ((canvasX - this.margin.left) / this.chartWidth) * 80;
+                const economicY = ((this.height - this.margin.bottom - canvasY) / this.chartHeight) * 100;
+                
+                // 對於接近水平的線條，使用特殊檢測
+                if (Math.abs(this.demandSlope) < 0.001) {
+                    // 水平線檢測：檢查是否接近基準點的Y值
+                    const distance = Math.abs(economicY - this.basePrice);
+                    return distance < 10 && economicX >= 0 && economicX <= 80;
+                } else {
+                    // 正常線條檢測
+                    const lineY = this.demandIntercept + this.demandSlope * economicX;
+                    const distance = Math.abs(economicY - lineY);
+                    
+                    return distance < 10 && 
+                           economicX >= 0 && economicX <= 80 && 
+                           economicY >= 0 && economicY <= 100;
+                }
+            }
+            
+            updateDemandSlope(pos) {
+                // 轉換到經濟座標
+                const economicX = ((pos.x - this.margin.left) / this.chartWidth) * 80;
+                const economicY = ((this.height - this.margin.bottom - pos.y) / this.chartHeight) * 100;
+                
+                // 計算新斜率（保持通過基準點）
+                if (Math.abs(economicX - this.baseQuantity) > 0.1) {
+                    const newSlope = (economicY - this.basePrice) / (economicX - this.baseQuantity);
+                    // 限制斜率範圍：從接近水平(0度)到接近垂直(90度)
+                    this.demandSlope = Math.max(-1000, Math.min(-0.00001, newSlope));
+                    
+                    // 特殊處理：如果用戶拖拽到接近水平位置（Y值變化很小）
+                    const yDiff = Math.abs(economicY - this.basePrice);
+                    if (yDiff < 5) {
+                        this.demandSlope = -0.00001; // 強制設為接近水平
+                    }
+                    
+                    // 重新計算截距
+                    this.demandIntercept = this.basePrice - this.demandSlope * this.baseQuantity;
+                }
+            }
+            
+            selectElasticity(type) {
+                this.selectedElasticity = type;
+                this.updateButtonStates('.elasticity-btn', type === 'high' ? 0 : 1);
+                this.updateElasticityDisplay();
+                this.updateSimulateButton();
+                this.updatePredictionPanel();
+                
+                // 顯示提示框並開始閃爍動畫
+                this.showElasticityHint();
+            }
+            
+            selectPriceChange(type) {
+                // 只有在修改过需求线后才能选择价格变化
+                if (!this.hasModifiedDemandLine) {
+                    return;
+                }
+                
+                this.selectedPriceChange = type;
+                this.updateButtonStates('.price-btn', type === 'increase' ? 0 : 1);
+                this.updateSimulateButton();
+                this.updatePredictionPanel();
+                this.updateTaskAvailability(); // 更新任务3的可用性
+                
+                // 重新繪製圖表以顯示價格變化視覺提示
+                this.drawChart();
+            }
+            
+            selectBenefit(type) {
+                this.selectedBenefit = type;
+                this.updateButtonStates('.benefit-btn', type === 'benefit' ? 0 : 1);
+                this.updateSimulateButton();
+                this.updatePredictionPanel();
+            }
+            
+            selectPrediction(type) {
+                this.prediction = type;
+                const buttons = ['up', 'same', 'down'];
+                this.updateButtonStates('.prediction-btn', buttons.indexOf(type));
+                this.updateSimulateButton();
+            }
+            
+            updateButtonStates(selector, activeIndex) {
+                const buttons = document.querySelectorAll(selector);
+                buttons.forEach((btn, index) => {
+                    btn.classList.remove('border-primary', 'bg-primary', 'text-white');
+                    btn.classList.add('border-gray-300', 'dark:border-gray-600');
+                    
+                    if (index === activeIndex) {
+                        btn.classList.remove('border-gray-300', 'dark:border-gray-600');
+                        btn.classList.add('border-primary', 'bg-primary', 'text-white');
+                    }
+                });
+            }
+            
+            updateElasticityDisplay() {
+                // 彈性係數不再顯示，但仍然計算
+                const elasticity = this.calculateElasticity();
+                // 移除顯示更新，只保留計算功能
+            }
+            
+            calculateElasticity() {
+                // 在均衡點計算點彈性
+                return this.demandSlope * (this.baseQuantity / this.basePrice);
+            }
+            
+            updatePredictionPanel() {
+                // 移除預測面板功能，因為面板已被刪除
+            }
+            
+            updateSimulateButton() {
+                // 移除模擬按鈕功能，因為按鈕已被刪除
+            }
+            
+            // 座標轉換
+            toCanvasX(x) {
+                return this.margin.left + (x / 80) * this.chartWidth;
+            }
+            
+            toCanvasY(y) {
+                return this.margin.top + this.chartHeight - (y / 100) * this.chartHeight;
+            }
+            
+            drawChart() {
+                this.ctx.clearRect(0, 0, this.width, this.height);
+                
+                const isDark = document.documentElement.classList.contains('dark');
+                this.ctx.strokeStyle = isDark ? '#9CA3AF' : '#6B7280';
+                this.ctx.fillStyle = isDark ? '#F3F4F6' : '#374151';
+                this.ctx.font = '12px sans-serif';
+                
+                this.drawAxes();
+                this.drawDemandLine();
+                this.drawPriceChangeIndicators();
+                this.drawInstructions();
+                
+                // 繪製所有拖拽標籤（如果有的話）
+                this.drawDraggedLabels();
+            }
+            
+            drawAxes() {
+                this.ctx.beginPath();
+                
+                // Y軸
+                this.ctx.moveTo(this.margin.left, this.margin.top);
+                this.ctx.lineTo(this.margin.left, this.height - this.margin.bottom);
+                
+                // X軸
+                this.ctx.moveTo(this.margin.left, this.height - this.margin.bottom);
+                this.ctx.lineTo(this.width - this.margin.right, this.height - this.margin.bottom);
+                
+                this.ctx.stroke();
+                
+                // 標籤
+                this.ctx.fillText('價格', this.margin.left - 40, this.margin.top - 10);
+                this.ctx.fillText('數量', this.width - this.margin.right + 10, this.height - this.margin.bottom + 15);
+                
+
+            }
+            
+            drawDemandLine() {
+                this.ctx.beginPath();
+                this.ctx.strokeStyle = '#3B82F6';
+                this.ctx.lineWidth = 3;
+                
+                // 對於接近水平的線條，使用簡化的繪製方法
+                if (Math.abs(this.demandSlope) < 0.001) {
+                    // 水平線：從左到右畫一條直線
+                    const y = this.basePrice; // 保持在基準點高度
+                    this.ctx.moveTo(this.toCanvasX(0), this.toCanvasY(y));
+                    this.ctx.lineTo(this.toCanvasX(80), this.toCanvasY(y));
+                } else {
+                    // 正常斜率的線條
+                    // Y軸交點 (x=0時的y值)
+                    const yAxisIntercept = this.demandIntercept;
+                    // X軸交點 (y=0時的x值) - 加入安全檢查
+                    let xAxisIntercept = -this.demandIntercept / this.demandSlope;
+                    
+                    // 防止極值計算錯誤
+                    if (!isFinite(xAxisIntercept)) {
+                        xAxisIntercept = 10000; // 設定一個很大的值
+                    }
+                    
+                    // 確定繪製範圍
+                    let startX = 0;
+                    let startY = yAxisIntercept;
+                    let endX = Math.min(80, Math.max(0, xAxisIntercept));
+                    let endY = 0;
+                    
+                    // 如果Y軸交點超出範圍，從圖表頂部開始
+                    if (startY > 100) {
+                        startY = 100;
+                        startX = Math.max(0, (100 - this.demandIntercept) / this.demandSlope);
+                    }
+                    if (startY < 0) {
+                        startY = 0;
+                        startX = Math.max(0, (0 - this.demandIntercept) / this.demandSlope);
+                    }
+                    
+                    // 如果X軸交點超出範圍，延伸到圖表右邊界
+                    if (xAxisIntercept > 80 || xAxisIntercept < 0) {
+                        endX = 80;
+                        endY = this.demandIntercept + this.demandSlope * 80;
+                        endY = Math.min(100, Math.max(0, endY));
+                    }
+                    
+                    // 最終邊界檢查
+                    startX = Math.max(0, Math.min(80, startX));
+                    startY = Math.min(100, Math.max(0, startY));
+                    endX = Math.max(0, Math.min(80, endX));
+                    endY = Math.min(100, Math.max(0, endY));
+                    
+                    this.ctx.moveTo(this.toCanvasX(startX), this.toCanvasY(startY));
+                    this.ctx.lineTo(this.toCanvasX(endX), this.toCanvasY(endY));
+                }
+                
+                this.ctx.stroke();
+                
+                // 需求線標籤 - D字的位置根據線條類型調整
+                this.ctx.fillStyle = '#3B82F6';
+                this.ctx.font = 'bold 16px sans-serif';
+                
+                // 計算D字位置 - 垂直線特殊處理，其他都在右下末端
+                let dX, dY;
+                
+                if (Math.abs(this.demandSlope) > 100) {
+                    // 垂直線：D字在線的較高和較左位置，但仍在線的右方
+                    dX = this.baseQuantity + 2;  // 較左但仍在線右方
+                    dY = Math.max(15, this.basePrice + 40);  // 較高
+                } else {
+                    // 所有其他情況（水平線和傾斜線）：D字在線的右下末端
+                    // 複用繪製邏輯找到實際的線條終點
+                    const yAxisIntercept = this.demandIntercept;
+                    let xAxisIntercept = -this.demandIntercept / this.demandSlope;
+                    
+                    if (!isFinite(xAxisIntercept)) {
+                        xAxisIntercept = 10000;
+                    }
+                    
+                    // 確定繪製範圍（與drawDemandLine完全相同的邏輯）
+                    let startX = 0;
+                    let startY = yAxisIntercept;
+                    let endX = Math.min(80, Math.max(0, xAxisIntercept));
+                    let endY = 0;
+                    
+                    // 如果Y軸交點超出範圍，從圖表頂部或底部開始
+                    if (startY > 100) {
+                        startY = 100;
+                        startX = Math.max(0, (100 - this.demandIntercept) / this.demandSlope);
+                    }
+                    if (startY < 0) {
+                        startY = 0;
+                        startX = Math.max(0, (0 - this.demandIntercept) / this.demandSlope);
+                    }
+                    
+                    // 如果X軸交點超出範圍，延伸到圖表右邊界
+                    if (xAxisIntercept > 80 || xAxisIntercept < 0) {
+                        endX = 80;
+                        endY = this.demandIntercept + this.demandSlope * 80;
+                        endY = Math.min(100, Math.max(0, endY));
+                    }
+                    
+                    // 最終邊界檢查
+                    startX = Math.max(0, Math.min(80, startX));
+                    startY = Math.min(100, Math.max(0, startY));
+                    endX = Math.max(0, Math.min(80, endX));
+                    endY = Math.min(100, Math.max(0, endY));
+                    
+                    // D字在右下末端：選擇最右邊的點作為基準
+                    if (endX >= startX) {
+                        // 使用右端點
+                        dX = endX + 3;  // 稍微右移一點
+                        dY = endY - 5;  // 稍微下移一點
+                    } else {
+                        // 使用起始點
+                        dX = startX + 3;
+                        dY = startY - 5;
+                    }
+                }
+                
+                // 確保D字不會超出圖表邊界
+                dX = Math.min(78, Math.max(2, dX));
+                dY = Math.min(98, Math.max(12, dY));
+                
+                this.ctx.fillText('D', this.toCanvasX(dX), this.toCanvasY(dY));
+                
+                this.ctx.lineWidth = 1;
+                this.ctx.font = '12px sans-serif';
+            }
+            
+
+            
+            drawPriceChangeIndicators() {
+                if (!this.selectedPriceChange) return;
+                
+                const priceChangeDirection = this.selectedPriceChange === 'increase' ? 1 : -1;
+                const newPrice = this.basePrice * (1 + priceChangeDirection * this.priceChangePercent);
+                
+                // 繪製P1的虛線 (原始價格到需求線到X軸)
+                this.ctx.setLineDash([5, 5]);
+                this.ctx.strokeStyle = '#9CA3AF';
+                this.ctx.lineWidth = 2;
+                
+                // P1水平線：從Y軸到需求線交點
+                this.ctx.beginPath();
+                this.ctx.moveTo(this.toCanvasX(0), this.toCanvasY(this.basePrice));
+                this.ctx.lineTo(this.toCanvasX(this.baseQuantity), this.toCanvasY(this.basePrice));
+                this.ctx.stroke();
+                
+                // Q1垂直線：從需求線交點到X軸
+                this.ctx.beginPath();
+                this.ctx.moveTo(this.toCanvasX(this.baseQuantity), this.toCanvasY(this.basePrice));
+                this.ctx.lineTo(this.toCanvasX(this.baseQuantity), this.toCanvasY(0));
+                this.ctx.stroke();
+                
+                // 計算P2在需求線上的真正交點數量（不是彈性計算的數量）
+                let p2QuantityOnDemandLine;
+                if (Math.abs(this.demandSlope) < 0.001) {
+                    // 水平需求線情況
+                    p2QuantityOnDemandLine = this.baseQuantity; // 保持相同數量
+                } else {
+                    // 通過需求線方程計算：Q = (P - intercept) / slope
+                    p2QuantityOnDemandLine = (newPrice - this.demandIntercept) / this.demandSlope;
+                    // 確保在圖表範圍內
+                    p2QuantityOnDemandLine = Math.max(0, Math.min(80, p2QuantityOnDemandLine));
+                }
+                
+                // 繪製P2的虛線 (新價格到需求線到X軸)
+                // P2水平線：從Y軸到需求線交點
+                this.ctx.beginPath();
+                this.ctx.moveTo(this.toCanvasX(0), this.toCanvasY(newPrice));
+                this.ctx.lineTo(this.toCanvasX(p2QuantityOnDemandLine), this.toCanvasY(newPrice));
+                this.ctx.stroke();
+                
+                // Q2垂直線：從需求線交點到X軸
+                this.ctx.beginPath();
+                this.ctx.moveTo(this.toCanvasX(p2QuantityOnDemandLine), this.toCanvasY(newPrice));
+                this.ctx.lineTo(this.toCanvasX(p2QuantityOnDemandLine), this.toCanvasY(0));
+                this.ctx.stroke();
+                
+                this.ctx.setLineDash([]); // 重置虛線
+                
+                // 繪製橙色箭頭
+                this.drawPriceArrows(newPrice);
+                
+                this.ctx.lineWidth = 1;
+            }
+            
+            drawPriceArrows(newPrice) {
+                const arrowColor = '#F97316'; // 橙色
+                const arrowSize = 8;
+                
+                // Y軸箭頭 (價格變化)
+                const yArrowX = this.margin.left - 15;
+                const yArrowStartY = this.toCanvasY(this.basePrice);
+                const yArrowEndY = this.toCanvasY(newPrice);
+                
+                this.ctx.strokeStyle = arrowColor;
+                this.ctx.fillStyle = arrowColor;
+                this.ctx.lineWidth = 2;
+                
+                // Y軸箭頭線
+                this.ctx.beginPath();
+                this.ctx.moveTo(yArrowX, yArrowStartY);
+                this.ctx.lineTo(yArrowX, yArrowEndY);
+                this.ctx.stroke();
+                
+                // Y軸箭頭頭部
+                const yDirection = yArrowEndY < yArrowStartY ? 1 : -1; // 修正箭頭方向
+                this.ctx.beginPath();
+                this.ctx.moveTo(yArrowX, yArrowEndY);
+                this.ctx.lineTo(yArrowX - arrowSize/2, yArrowEndY + yDirection * arrowSize);
+                this.ctx.lineTo(yArrowX + arrowSize/2, yArrowEndY + yDirection * arrowSize);
+                this.ctx.closePath();
+                this.ctx.fill();
+                
+                // Y軸價格標註 (P1 → P2)
+                this.ctx.font = 'bold 12px sans-serif';
+                this.ctx.textAlign = 'right';
+                this.ctx.fillStyle = '#000000'; // 黑色
+                
+                // P1標註 (原始價格)
+                this.ctx.fillText('P1', yArrowX - 5, yArrowStartY + 4);
+                
+                // P2標註 (新價格)
+                this.ctx.fillText('P2', yArrowX - 5, yArrowEndY + 4);
+                
+                // 重置文字對齊
+                this.ctx.textAlign = 'left';
+                this.ctx.font = '12px sans-serif';
+                
+                // 計算需求量變化 (用於X軸箭頭)
+                const elasticity = this.calculateElasticity();
+                const priceChangeDirection = this.selectedPriceChange === 'increase' ? 1 : -1;
+                const priceChangePercent = priceChangeDirection * this.priceChangePercent;
+                const quantityChangePercent = elasticity * priceChangePercent;
+                const newQuantity = this.baseQuantity * (1 + quantityChangePercent);
+                
+                // 計算Q2在需求線上的真正位置（與P2虛線一致）
+                let q2QuantityOnDemandLine;
+                if (Math.abs(this.demandSlope) < 0.001) {
+                    // 水平需求線情況
+                    q2QuantityOnDemandLine = this.baseQuantity; // 保持相同數量
+                } else {
+                    // 通過需求線方程計算：Q = (P - intercept) / slope
+                    q2QuantityOnDemandLine = (newPrice - this.demandIntercept) / this.demandSlope;
+                    // 確保在圖表範圍內
+                    q2QuantityOnDemandLine = Math.max(0, Math.min(80, q2QuantityOnDemandLine));
+                }
+                
+                // X軸箭頭 (數量變化) - 指向Q2的正確位置
+                const xArrowY = this.height - this.margin.bottom + 15;
+                const xArrowStartX = this.toCanvasX(this.baseQuantity);
+                const xArrowEndX = this.toCanvasX(q2QuantityOnDemandLine);
+                
+                // X軸箭頭保持橙色
+                this.ctx.strokeStyle = arrowColor;
+                this.ctx.fillStyle = arrowColor;
+                
+                // X軸箭頭線
+                this.ctx.beginPath();
+                this.ctx.moveTo(xArrowStartX, xArrowY);
+                this.ctx.lineTo(xArrowEndX, xArrowY);
+                this.ctx.stroke();
+                
+                // X軸箭頭頭部
+                const xDirection = q2QuantityOnDemandLine > this.baseQuantity ? 1 : -1; // 箭頭指向
+                this.ctx.beginPath();
+                this.ctx.moveTo(xArrowEndX, xArrowY);
+                this.ctx.lineTo(xArrowEndX - xDirection * arrowSize, xArrowY - arrowSize/2);
+                this.ctx.lineTo(xArrowEndX - xDirection * arrowSize, xArrowY + arrowSize/2);
+                this.ctx.closePath();
+                this.ctx.fill();
+                
+                // X軸數量標註 (Q1 → Q2)
+                this.ctx.font = 'bold 12px sans-serif';
+                this.ctx.textAlign = 'center';
+                this.ctx.fillStyle = '#000000'; // 黑色
+                
+                // Q1標註 (原始數量)
+                this.ctx.fillText('Q1', xArrowStartX, xArrowY + 20);
+                
+                // Q2標註 (新數量) - 使用需求線上的正確位置
+                this.ctx.fillText('Q2', this.toCanvasX(q2QuantityOnDemandLine), xArrowY + 20);
+                
+                // 重置文字對齊
+                this.ctx.textAlign = 'left';
+                this.ctx.font = '12px sans-serif';
+            }
+            
+            drawInstructions() {
+                // 繪製提示框
+                if (this.showHint) {
+                    this.drawHintBox();
+                }
+                
+                // 繪製比較框（任務4）- 一開始就顯示
+                this.drawComparisonBox();
+            }
+            
+            drawDropZones() {
+                // 只有在完成前兩個任務後才顯示拖拽區域
+                if (!this.selectedElasticity || !this.selectedPriceChange) {
+                    return;
+                }
+                
+                this.ctx.save();
+                
+                // 定義兩個放置區域的坐標
+                const benefitZoneX1 = this.margin.left + 20;
+                const benefitZoneX2 = this.margin.left + 120;
+                const benefitZoneY1 = this.margin.top + 20;
+                const benefitZoneY2 = this.margin.top + 80;
+                
+                const lossZoneX1 = this.width - this.margin.right - 120;
+                const lossZoneX2 = this.width - this.margin.right - 20;
+                const lossZoneY1 = this.height - this.margin.bottom - 80;
+                const lossZoneY2 = this.height - this.margin.bottom - 20;
+                
+                // 繪製得益區域（左上方，綠色）
+                this.ctx.strokeStyle = '#10B981';
+                this.ctx.fillStyle = 'rgba(16, 185, 129, 0.1)';
+                this.ctx.lineWidth = 2;
+                this.ctx.setLineDash([5, 5]);
+                
+                this.ctx.beginPath();
+                this.ctx.rect(benefitZoneX1, benefitZoneY1, 
+                             benefitZoneX2 - benefitZoneX1, benefitZoneY2 - benefitZoneY1);
+                this.ctx.fill();
+                this.ctx.stroke();
+                
+                // 得益標籤
+                this.ctx.fillStyle = '#10B981';
+                this.ctx.font = 'bold 14px sans-serif';
+                this.ctx.textAlign = 'center';
+                this.ctx.fillText('得益區域', 
+                                (benefitZoneX1 + benefitZoneX2) / 2, 
+                                (benefitZoneY1 + benefitZoneY2) / 2);
+                
+                // 繪製損失區域（右下方，紅色）
+                this.ctx.strokeStyle = '#EF4444';
+                this.ctx.fillStyle = 'rgba(239, 68, 68, 0.1)';
+                
+                this.ctx.beginPath();
+                this.ctx.rect(lossZoneX1, lossZoneY1, 
+                             lossZoneX2 - lossZoneX1, lossZoneY2 - lossZoneY1);
+                this.ctx.fill();
+                this.ctx.stroke();
+                
+                // 損失標籤
+                this.ctx.fillStyle = '#EF4444';
+                this.ctx.font = 'bold 14px sans-serif';
+                this.ctx.textAlign = 'center';
+                this.ctx.fillText('損失區域', 
+                                (lossZoneX1 + lossZoneX2) / 2, 
+                                (lossZoneY1 + lossZoneY2) / 2);
+                
+                this.ctx.restore();
+            }
+            
+            showElasticityHint() {
+                this.showHint = true;
+                this.hintOpacity = 1;
+                this.drawChart();
+                
+                // 持續閃爍動畫，直到用戶開始拖拽
+                if (this.hintInterval) {
+                    clearInterval(this.hintInterval);
+                }
+                
+                this.hintInterval = setInterval(() => {
+                    if (this.showHint) {
+                        this.hintOpacity = this.hintOpacity === 1 ? 0.3 : 1;
+                        this.drawChart();
+                    }
+                }, 300);
+            }
+            
+            hideHint() {
+                this.showHint = false;
+                if (this.hintInterval) {
+                    clearInterval(this.hintInterval);
+                    this.hintInterval = null;
+                }
+                this.drawChart();
+            }
+            
+            drawHintBox() {
+                const isDark = document.documentElement.classList.contains('dark');
+                
+                // 計算提示框位置（圖表上方但確保可見）
+                const boxWidth = 200;
+                const boxHeight = 50;
+                const boxX = this.margin.left + (this.chartWidth - boxWidth) / 2;
+                const boxY = Math.max(5, this.margin.top - boxHeight + 5); // 確保距離頂部至少5px
+                
+                // 設置透明度
+                this.ctx.globalAlpha = this.hintOpacity;
+                
+                // 繪製背景框
+                this.ctx.fillStyle = isDark ? 'rgba(55, 65, 81, 0.95)' : 'rgba(248, 250, 252, 0.95)';
+                this.ctx.strokeStyle = '#EF4444'; // 紅色邊框
+                this.ctx.lineWidth = 3;
+                
+                // 繪製圓角矩形
+                this.ctx.beginPath();
+                this.roundRect(boxX, boxY, boxWidth, boxHeight, 8);
+                this.ctx.fill();
+                this.ctx.stroke();
+                
+                // 繪製文字
+                this.ctx.fillStyle = isDark ? '#F3F4F6' : '#374151';
+                this.ctx.font = 'bold 16px sans-serif';
+                this.ctx.textAlign = 'center';
+                this.ctx.textBaseline = 'middle';
+                
+                this.ctx.fillText('改變需求曲線角度', boxX + boxWidth/2, boxY + boxHeight/2);
+                
+                // 重置設定
+                this.ctx.globalAlpha = 1;
+                this.ctx.textAlign = 'left';
+                this.ctx.textBaseline = 'alphabetic';
+                this.ctx.lineWidth = 1;
+            }
+            
+            roundRect(x, y, width, height, radius) {
+                this.ctx.beginPath();
+                this.ctx.moveTo(x + radius, y);
+                this.ctx.lineTo(x + width - radius, y);
+                this.ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+                this.ctx.lineTo(x + width, y + height - radius);
+                this.ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+                this.ctx.lineTo(x + radius, y + height);
+                this.ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+                this.ctx.lineTo(x, y + radius);
+                this.ctx.quadraticCurveTo(x, y, x + radius, y);
+                this.ctx.closePath();
+            }
+            
+            runSimulation() {
+                // 使用當前需求線的彈性
+                const elasticity = this.calculateElasticity();
+                
+                // 計算價格變化
+                const priceChangeDirection = this.selectedPriceChange === 'increase' ? 1 : -1;
+                const priceChange = priceChangeDirection * this.priceChangePercent;
+                const newPrice = this.basePrice * (1 + priceChange);
+                
+                // 計算需求量變化 (根據彈性)
+                const quantityChangePercent = elasticity * priceChange;
+                const newQuantity = this.baseQuantity * (1 + quantityChangePercent);
+                
+                // 計算收入變化
+                const oldRevenue = this.basePrice * this.baseQuantity;
+                const newRevenue = newPrice * newQuantity;
+                const revenueChangePercent = (newRevenue - oldRevenue) / oldRevenue;
+                
+                // 繪製結果
+                this.drawSimulationResult(newPrice, newQuantity);
+                
+                // 顯示數據
+                this.showResults(priceChange, quantityChangePercent, revenueChangePercent);
+                
+                // 檢查預測
+                this.checkPrediction(revenueChangePercent);
+            }
+            
+            drawSimulationResult(newPrice, newQuantity) {
+                this.ctx.clearRect(0, 0, this.width, this.height);
+                
+                const isDark = document.documentElement.classList.contains('dark');
+                this.ctx.strokeStyle = isDark ? '#9CA3AF' : '#6B7280';
+                this.ctx.fillStyle = isDark ? '#F3F4F6' : '#374151';
+                this.ctx.font = '12px sans-serif';
+                
+                this.drawAxes();
+                
+                // 繪製當前需求線 - 使用與drawDemandLine相同的邏輯
+                this.ctx.beginPath();
+                this.ctx.strokeStyle = '#3B82F6';
+                this.ctx.lineWidth = 3;
+                
+                // 對於接近水平的線條，使用簡化的繪製方法
+                if (Math.abs(this.demandSlope) < 0.001) {
+                    // 水平線：從左到右畫一條直線
+                    const y = this.basePrice; // 保持在基準點高度
+                    this.ctx.moveTo(this.toCanvasX(0), this.toCanvasY(y));
+                    this.ctx.lineTo(this.toCanvasX(80), this.toCanvasY(y));
+                } else {
+                    // 正常斜率的線條
+                    // Y軸交點 (x=0時的y值)
+                    const yAxisIntercept = this.demandIntercept;
+                    // X軸交點 (y=0時的x值) - 加入安全檢查
+                    let xAxisIntercept = -this.demandIntercept / this.demandSlope;
+                    
+                    // 防止極值計算錯誤
+                    if (!isFinite(xAxisIntercept)) {
+                        xAxisIntercept = 10000; // 設定一個很大的值
+                    }
+                    
+                    // 確定繪製範圍
+                    let startX = 0;
+                    let startY = yAxisIntercept;
+                    let endX = Math.min(80, Math.max(0, xAxisIntercept));
+                    let endY = 0;
+                    
+                    // 如果Y軸交點超出範圍，從圖表頂部開始
+                    if (startY > 100) {
+                        startY = 100;
+                        startX = Math.max(0, (100 - this.demandIntercept) / this.demandSlope);
+                    }
+                    if (startY < 0) {
+                        startY = 0;
+                        startX = Math.max(0, (0 - this.demandIntercept) / this.demandSlope);
+                    }
+                    
+                    // 如果X軸交點超出範圍，延伸到圖表右邊界
+                    if (xAxisIntercept > 80 || xAxisIntercept < 0) {
+                        endX = 80;
+                        endY = this.demandIntercept + this.demandSlope * 80;
+                        endY = Math.min(100, Math.max(0, endY));
+                    }
+                    
+                    // 最終邊界檢查
+                    startX = Math.max(0, Math.min(80, startX));
+                    startY = Math.min(100, Math.max(0, startY));
+                    endX = Math.max(0, Math.min(80, endX));
+                    endY = Math.min(100, Math.max(0, endY));
+                    
+                    this.ctx.moveTo(this.toCanvasX(startX), this.toCanvasY(startY));
+                    this.ctx.lineTo(this.toCanvasX(endX), this.toCanvasY(endY));
+                }
+                
+                this.ctx.stroke();
+                
+                // 標註需求線 - D字的位置根據線條類型調整（與drawDemandLine使用相同邏輯）
+                this.ctx.fillStyle = '#3B82F6';
+                this.ctx.font = 'bold 16px sans-serif';
+                
+                // 計算D字位置 - 垂直線特殊處理，其他都在右下末端（複用邏輯）
+                let dX, dY;
+                
+                if (Math.abs(this.demandSlope) > 100) {
+                    // 垂直線：D字在線的較高和較左位置，但仍在線的右方
+                    dX = this.baseQuantity + 2;  // 較左但仍在線右方
+                    dY = Math.max(15, this.basePrice + 40);  // 較高
+                } else {
+                    // 所有其他情況（水平線和傾斜線）：D字在線的右下末端
+                    // 複用繪製邏輯找到實際的線條終點
+                    const yAxisIntercept = this.demandIntercept;
+                    let xAxisIntercept = -this.demandIntercept / this.demandSlope;
+                    
+                    if (!isFinite(xAxisIntercept)) {
+                        xAxisIntercept = 10000;
+                    }
+                    
+                    // 確定繪製範圍（與drawDemandLine完全相同的邏輯）
+                    let startX = 0;
+                    let startY = yAxisIntercept;
+                    let endX = Math.min(80, Math.max(0, xAxisIntercept));
+                    let endY = 0;
+                    
+                    // 如果Y軸交點超出範圍，從圖表頂部或底部開始
+                    if (startY > 100) {
+                        startY = 100;
+                        startX = Math.max(0, (100 - this.demandIntercept) / this.demandSlope);
+                    }
+                    if (startY < 0) {
+                        startY = 0;
+                        startX = Math.max(0, (0 - this.demandIntercept) / this.demandSlope);
+                    }
+                    
+                    // 如果X軸交點超出範圍，延伸到圖表右邊界
+                    if (xAxisIntercept > 80 || xAxisIntercept < 0) {
+                        endX = 80;
+                        endY = this.demandIntercept + this.demandSlope * 80;
+                        endY = Math.min(100, Math.max(0, endY));
+                    }
+                    
+                    // 最終邊界檢查
+                    startX = Math.max(0, Math.min(80, startX));
+                    startY = Math.min(100, Math.max(0, startY));
+                    endX = Math.max(0, Math.min(80, endX));
+                    endY = Math.min(100, Math.max(0, endY));
+                    
+                    // D字在右下末端：選擇最右邊的點作為基準
+                    if (endX >= startX) {
+                        // 使用右端點
+                        dX = endX + 3;  // 稍微右移一點
+                        dY = endY - 5;  // 稍微下移一點
+                    } else {
+                        // 使用起始點
+                        dX = startX + 3;
+                        dY = startY - 5;
+                    }
+                }
+                
+                // 確保D字不會超出圖表邊界
+                dX = Math.min(78, Math.max(2, dX));
+                dY = Math.min(98, Math.max(12, dY));
+                
+                this.ctx.fillText('D', this.toCanvasX(dX), this.toCanvasY(dY));
+                this.ctx.font = '12px sans-serif';
+                
+                // 繪製原始點
+                this.ctx.beginPath();
+                this.ctx.fillStyle = '#9CA3AF';
+                this.ctx.arc(this.toCanvasX(this.baseQuantity), this.toCanvasY(this.basePrice), 5, 0, 2 * Math.PI);
+                this.ctx.fill();
+                this.ctx.fillText(`原始點`, 
+                                this.toCanvasX(this.baseQuantity) + 10, this.toCanvasY(this.basePrice) - 10);
+                
+                // 繪製新點
+                this.ctx.beginPath();
+                this.ctx.fillStyle = '#10B981';
+                this.ctx.arc(this.toCanvasX(newQuantity), this.toCanvasY(newPrice), 5, 0, 2 * Math.PI);
+                this.ctx.fill();
+                this.ctx.fillStyle = '#10B981';
+                this.ctx.fillText(`新點`, 
+                                this.toCanvasX(newQuantity) + 10, this.toCanvasY(newPrice) + 20);
+                
+                // 繪製箭頭
+                this.drawArrow(
+                    this.toCanvasX(this.baseQuantity), this.toCanvasY(this.basePrice),
+                    this.toCanvasX(newQuantity), this.toCanvasY(newPrice)
+                );
+                
+                this.ctx.lineWidth = 1;
+            }
+            
+            drawArrow(fromX, fromY, toX, toY) {
+                const headlen = 10;
+                const dx = toX - fromX;
+                const dy = toY - fromY;
+                const angle = Math.atan2(dy, dx);
+                
+                this.ctx.strokeStyle = '#10B981';
+                this.ctx.lineWidth = 2;
+                
+                this.ctx.beginPath();
+                this.ctx.moveTo(fromX, fromY);
+                this.ctx.lineTo(toX, toY);
+                this.ctx.lineTo(toX - headlen * Math.cos(angle - Math.PI / 6), toY - headlen * Math.sin(angle - Math.PI / 6));
+                this.ctx.moveTo(toX, toY);
+                this.ctx.lineTo(toX - headlen * Math.cos(angle + Math.PI / 6), toY - headlen * Math.sin(angle + Math.PI / 6));
+                this.ctx.stroke();
+            }
+            
+            showResults(priceChange, quantityChange, revenueChange) {
+                document.getElementById('resultsPanel').classList.remove('hidden');
+                
+                document.getElementById('priceChange').textContent = 
+                    `${priceChange > 0 ? '+' : ''}${(priceChange * 100).toFixed(1)}%`;
+                document.getElementById('quantityChange').textContent = 
+                    `${quantityChange > 0 ? '+' : ''}${(quantityChange * 100).toFixed(1)}%`;
+                document.getElementById('revenueChange').textContent = 
+                    `${revenueChange > 0 ? '+' : ''}${(revenueChange * 100).toFixed(1)}%`;
+                
+                // 解釋
+                const elasticity = this.calculateElasticity();
+                const elasticityType = Math.abs(elasticity) > 1 ? '高彈性' : '低彈性';
+                const priceDirection = this.selectedPriceChange === 'increase' ? '漲價' : '降價';
+                const explanation = `在${elasticityType}需求下（彈性係數${elasticity.toFixed(2)}），${priceDirection}會導致需求量${quantityChange > 0 ? '增加' : '減少'}${Math.abs(quantityChange * 100).toFixed(1)}%，總收入${revenueChange > 0 ? '增加' : '減少'}${Math.abs(revenueChange * 100).toFixed(1)}%。`;
+                
+                document.getElementById('explanation').textContent = explanation;
+            }
+            
+            submitAnswer() {
+                // 檢查是否已完成前四個任務
+                if (!this.selectedElasticity || !this.selectedPriceChange || !this.selectedBenefit || !this.isDraggedToCanvas || !this.selectedComparison || !this.isComparisonDraggedToCanvas) {
+                    const submitFeedback = document.getElementById('submitFeedback');
+                    submitFeedback.classList.remove('hidden', 'bg-green-100', 'bg-red-100', 'dark:bg-green-900', 'dark:bg-red-900');
+                    submitFeedback.classList.add('bg-yellow-100', 'dark:bg-yellow-900', 'text-yellow-800', 'dark:text-yellow-200');
+                    
+                    if (!this.selectedElasticity || !this.selectedPriceChange) {
+                        submitFeedback.textContent = '請先完成任務1和任務2的選擇。';
+                    } else if (!this.isDraggedToCanvas) {
+                        submitFeedback.textContent = '請將任務3的答案拖拽到圖表的P1-P2或Q1-Q2區域。';
+                    } else if (!this.isComparisonDraggedToCanvas) {
+                        submitFeedback.textContent = '請將任務4的比較符號拖拽到圖表右上方的比較框中。';
+                    } else {
+                        submitFeedback.textContent = '請先完成所有任務的選擇。';
+                    }
+                    return;
+                }
+                
+                // 計算實際的得益和損失面積
+                const areaResult = this.calculateBenefitLossAreas();
+                const benefitArea = areaResult.benefitArea;
+                const lossArea = areaResult.lossArea;
+                
+                // 根據面積比較確定正確答案
+                const actualResult = benefitArea > lossArea ? 'benefit' : 'loss';
+                const correctComparison = benefitArea > lossArea ? '>' : '<';
+                
+                // 獲取學生實際拖拽到的區域和比較符號
+                const studentZone = this.draggedPositions[this.selectedBenefit]?.zone;
+                const studentComparison = this.selectedComparison;
+                
+                // 調試信息 - 在控制台輸出詳細信息
+                console.log('=== 詳細調試信息 ===');
+                console.log('選擇的彈性類型:', this.selectedElasticity);
+                console.log('選擇的價格變化:', this.selectedPriceChange);
+                console.log('基礎價格:', this.basePrice);
+                console.log('基礎數量:', this.baseQuantity);
+                console.log('價格變化百分比:', this.priceChangePercent);
+                
+                // 重新計算一次以顯示過程
+                const priceChangeDirection = this.selectedPriceChange === 'increase' ? 1 : -1;
+                const newPrice = this.basePrice * (1 + priceChangeDirection * this.priceChangePercent);
+                console.log('新價格:', newPrice);
+                
+                let elasticity, q2Calculated;
+                if (this.selectedElasticity === 'high') {
+                    elasticity = -2.0;
+                } else {
+                    elasticity = -0.4;
+                }
+                const priceChangePercent = priceChangeDirection * this.priceChangePercent;
+                const quantityChangePercent = elasticity * priceChangePercent;
+                q2Calculated = this.baseQuantity * (1 + quantityChangePercent);
+                
+                console.log('使用的彈性係數:', elasticity);
+                console.log('價格變化百分比:', priceChangePercent);
+                console.log('數量變化百分比:', quantityChangePercent);
+                console.log('計算的Q2:', q2Calculated);
+                
+                console.log('得益面積:', benefitArea);
+                console.log('損失面積:', lossArea);
+                console.log('正確答案應該是:', actualResult);
+                console.log('正確比較符號應該是:', correctComparison);
+                console.log('學生選擇的答案:', this.selectedBenefit);
+                console.log('學生選擇的比較符號:', studentComparison);
+                console.log('學生拖拽到的區域:', studentZone);
+                console.log('===================');
+                
+                // 顯示結果
+                const submitFeedback = document.getElementById('submitFeedback');
+                submitFeedback.classList.remove('hidden', 'bg-yellow-100', 'dark:bg-yellow-900');
+                
+                // 檢查答案正確性 - 只需要檢查比較符號是否正確
+                const isComparisonCorrect = studentComparison === correctComparison;
+                const isZoneReasonable = studentZone !== null; // 只要放在了有效區域就算合理
+                
+                console.log('比較符號正確:', isComparisonCorrect);
+                console.log('區域合理:', isZoneReasonable);
+                console.log('正確比較關係:', benefitArea > lossArea ? '得益 > 損失' : '得益 < 損失');
+                console.log('學生選擇的比較:', `得益 ${studentComparison} 損失`);
+                
+                if (isComparisonCorrect && isZoneReasonable) {
+                    submitFeedback.classList.add('bg-green-100', 'dark:bg-green-900', 'text-green-800', 'dark:text-green-200');
+                    submitFeedback.textContent = `完全正確！得益${correctComparison}損失。`;
+                    
+                    // 標記當前彈性類型已完成
+                    this.completedTasks[this.selectedElasticity] = true;
+                    this.updateQuizAvailability();
+                } else {
+                    submitFeedback.classList.add('bg-red-100', 'dark:bg-red-900', 'text-red-800', 'dark:text-red-200');
+                    
+                    let errorMessage = '錯誤！';
+                    
+                    if (!isComparisonCorrect) {
+                        if (benefitArea > lossArea) {
+                            errorMessage += ` 得益面積 > 損失面積，應該選擇 > 符號。`;
+                        } else {
+                            errorMessage += ` 損失面積 > 得益面積，應該選擇 < 符號。`;
+                        }
+                    }
+                    
+                    if (!isZoneReasonable) {
+                        errorMessage += ' 請確保答案已拖拽到有效區域。';
+                    }
+                    
+                    const explanation = this.getAreaExplanation(this.selectedPriceChange, benefitArea, lossArea);
+                    submitFeedback.textContent = `${errorMessage} ${explanation}`;
+                }
+                
+                // 不自動隱藏反饋，讓學生查看結果
+            }
+            
+            calculateBenefitLossAreas() {
+                if (!this.selectedPriceChange || !this.selectedElasticity) return { benefitArea: 0, lossArea: 0 };
+                
+                const priceChangeDirection = this.selectedPriceChange === 'increase' ? 1 : -1;
+                const newPrice = this.basePrice * (1 + priceChangeDirection * this.priceChangePercent);
+                
+                // 使用選擇的彈性類型來計算Q2，而不是完全依賴拖拽的需求線
+                let q2QuantityOnDemandLine;
+                
+                if (this.selectedElasticity === 'high') {
+                    // 高彈性：使用彈性係數 -2.0 來計算數量變化
+                    const elasticity = -2.0;
+                    const priceChangePercent = priceChangeDirection * this.priceChangePercent;
+                    const quantityChangePercent = elasticity * priceChangePercent;
+                    q2QuantityOnDemandLine = this.baseQuantity * (1 + quantityChangePercent);
+                } else {
+                    // 低彈性：使用彈性係數 -0.4 來計算數量變化
+                    const elasticity = -0.4;
+                    const priceChangePercent = priceChangeDirection * this.priceChangePercent;
+                    const quantityChangePercent = elasticity * priceChangePercent;
+                    q2QuantityOnDemandLine = this.baseQuantity * (1 + quantityChangePercent);
+                }
+                
+                // 確保Q2在合理範圍內
+                q2QuantityOnDemandLine = Math.max(0, Math.min(80, q2QuantityOnDemandLine));
+                
+                let benefitArea, lossArea;
+                
+                if (this.selectedPriceChange === 'increase') {
+                    // 加價情況：
+                    // P1-P2區域（得益）= (P2-P1) × Q2（較小數量）
+                    // Q1-Q2區域（損失）= P1 × (Q1-Q2)
+                    const priceIncrease = newPrice - this.basePrice;
+                    const quantityDecrease = this.baseQuantity - q2QuantityOnDemandLine;
+                    
+                    benefitArea = priceIncrease * q2QuantityOnDemandLine; // P1-P2區域
+                    lossArea = this.basePrice * quantityDecrease; // Q1-Q2區域
+                } else {
+                    // 減價情況：
+                    // P1-P2區域（損失）= (P1-P2) × Q1（較小數量）
+                    // Q1-Q2區域（得益）= P2 × (Q2-Q1)
+                    const priceDecrease = this.basePrice - newPrice;
+                    const quantityIncrease = q2QuantityOnDemandLine - this.baseQuantity;
+                    
+                    lossArea = priceDecrease * this.baseQuantity; // P1-P2區域應該用Q1，不是Q2
+                    benefitArea = newPrice * quantityIncrease; // Q1-Q2區域
+                }
+                
+                return {
+                    benefitArea: Math.max(0, benefitArea),
+                    lossArea: Math.max(0, lossArea)
+                };
+            }
+            
+            getAreaExplanation(priceChange, benefitArea, lossArea) {
+                if (priceChange === 'increase') {
+                    return `加價時：P1-P2區域為「得益」面積(價格增加×剩餘數量)，Q1-Q2區域為「損失」面積(原價格×減少數量)。`;
+                } else {
+                    return `減價時：Q1-Q2區域為「得益」面積(新價格×增加數量)，P1-P2區域為「損失」面積(價格減少×剩餘數量)。`;
+                }
+            }
+            
+            getExplanation(elasticity, priceChange) {
+                if (elasticity === 'high' && priceChange === 'increase') {
+                    return '高彈性需求下，加價會導致需求量大幅下降，總收入減少。';
+                } else if (elasticity === 'high' && priceChange === 'decrease') {
+                    return '高彈性需求下，減價會導致需求量大幅增加，總收入增加。';
+                } else if (elasticity === 'low' && priceChange === 'increase') {
+                    return '低彈性需求下，加價時需求量下降有限，總收入增加。';
+                } else if (elasticity === 'low' && priceChange === 'decrease') {
+                    return '低彈性需求下，減價時需求量增加有限，總收入減少。';
+                }
+                return '';
+            }
+            
+            resetAll() {
+                // 重置所有選擇
+                this.selectedElasticity = null;
+                this.selectedPriceChange = null;
+                this.selectedBenefit = null;
+                this.prediction = null;
+                this.isDraggedToCanvas = false; // 重置拖拽狀態
+                this.draggedPositions = {}; // 清除所有拖拽標籤
+                this.hasModifiedDemandLine = false; // 重置需求線修改狀態
+                
+                // 重置任務4比較符號狀態
+                this.selectedComparison = null;
+                this.isComparisonDraggedToCanvas = false;
+                
+                // 重置需求線參數
+                this.demandSlope = -1.0;
+                this.demandIntercept = 90;
+                
+                // 重置所有按鈕狀態
+                document.querySelectorAll('.elasticity-btn, .price-btn, .prediction-btn').forEach(btn => {
+                    btn.classList.remove('border-primary', 'bg-primary', 'text-white');
+                    btn.classList.add('border-gray-300', 'dark:border-gray-600');
+                });
+                
+                // 恢復拖拽按鈕的原始樣式
+                const benefitBtn = document.getElementById('benefit');
+                const lossBtn = document.getElementById('loss');
+                benefitBtn.classList.remove('border-primary', 'bg-primary', 'text-white');
+                benefitBtn.classList.add('border-green-500', 'bg-green-100', 'dark:bg-green-900', 'text-green-800', 'dark:text-green-200');
+                lossBtn.classList.remove('border-primary', 'bg-primary', 'text-white');
+                lossBtn.classList.add('border-red-500', 'bg-red-100', 'dark:bg-red-900', 'text-red-800', 'dark:text-red-200');
+                
+                // 隱藏所有反饋面板
+                document.getElementById('submitFeedback').classList.add('hidden');
+                const resultsPanel = document.getElementById('resultsPanel');
+                if (resultsPanel) {
+                    resultsPanel.classList.add('hidden');
+                }
+                
+                // 更新任務可用性
+                this.updateTaskAvailability();
+                
+                // 重置顯示
+                this.updateElasticityDisplay();
+                this.updateSimulateButton();
+                this.drawChart();
+            }
+
+            checkPrediction(revenueChange) {
+                // 移除預測檢查功能，因為預測面板已被刪除
+            }
+            
+            resetSimulation() {
+                this.selectedElasticity = null;
+                this.selectedPriceChange = null;
+                this.selectedBenefit = null;
+                this.prediction = null;
+                
+                // 重置按鈕狀態
+                document.querySelectorAll('.elasticity-btn, .price-btn, .benefit-btn, .prediction-btn').forEach(btn => {
+                    btn.classList.remove('border-primary', 'bg-primary', 'text-white');
+                    btn.classList.add('border-gray-300', 'dark:border-gray-600');
+                });
+                
+                // 隱藏面板
+                document.getElementById('predictionPanel').classList.add('hidden');
+                document.getElementById('resultsPanel').classList.add('hidden');
+                document.getElementById('feedback').classList.add('hidden');
+                
+                // 重置顯示
+                this.updateElasticityDisplay();
+                this.updateSimulateButton();
+                this.drawChart();
+            }
+            
+            updateTaskAvailability() {
+                // 任務2按鈕狀態控制
+                const priceButtons = document.querySelectorAll('.price-btn');
+                const task2Hint = document.getElementById('task2Hint');
+                
+                priceButtons.forEach(btn => {
+                    if (this.hasModifiedDemandLine) {
+                        // 啟用任務2
+                        btn.disabled = false;
+                        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        btn.classList.add('hover:border-primary');
+                    } else {
+                        // 禁用任務2
+                        btn.disabled = true;
+                        btn.classList.add('opacity-50', 'cursor-not-allowed');
+                        btn.classList.remove('hover:border-primary');
+                    }
+                });
+                
+                // 更新任務2提示文字
+                if (this.hasModifiedDemandLine) {
+                    task2Hint.textContent = '';
+                    task2Hint.classList.add('hidden');
+                } else {
+                    task2Hint.textContent = '請先完成任務1：拖拽需求線改變彈性';
+                    task2Hint.classList.remove('hidden', 'text-green-600', 'dark:text-green-400');
+                    task2Hint.classList.add('text-gray-500', 'dark:text-gray-400');
+                }
+                
+                // 任務3拖拽按鈕狀態控制
+                const benefitButtons = document.querySelectorAll('.benefit-btn');
+                benefitButtons.forEach(btn => {
+                    if (this.hasModifiedDemandLine && this.selectedPriceChange) {
+                        // 啟用任務3
+                        btn.style.pointerEvents = 'auto';
+                        btn.classList.remove('opacity-50');
+                        btn.setAttribute('draggable', 'true');
+                    } else {
+                        // 禁用任務3
+                        btn.style.pointerEvents = 'none';
+                        btn.classList.add('opacity-50');
+                        btn.setAttribute('draggable', 'false');
+                    }
+                });
+                
+                // 任務4比較符號拖拽按鈕狀態控制
+                const comparisonButtons = document.querySelectorAll('.comparison-btn');
+                comparisonButtons.forEach(btn => {
+                    if (this.hasModifiedDemandLine && this.selectedPriceChange && this.isDraggedToCanvas) {
+                        // 啟用任務4
+                        btn.style.pointerEvents = 'auto';
+                        btn.classList.remove('opacity-50');
+                        btn.setAttribute('draggable', 'true');
+                    } else {
+                        // 禁用任務4
+                        btn.style.pointerEvents = 'none';
+                        btn.classList.add('opacity-50');
+                        btn.setAttribute('draggable', 'false');
+                    }
+                });
+            }
+            
+            // 任務4：比較框相關函數
+            drawComparisonBox() {
+                const isDark = document.documentElement.classList.contains('dark');
+                
+                // 比較框位置（圖表右上方）
+                const boxWidth = 140;
+                const boxHeight = 40;
+                const boxX = this.width - this.margin.right - boxWidth - 10;
+                const boxY = this.margin.top + 10;
+                
+                this.ctx.save();
+                
+                // 繪製背景框
+                this.ctx.fillStyle = isDark ? 'rgba(55, 65, 81, 0.95)' : 'rgba(248, 250, 252, 0.95)';
+                this.ctx.strokeStyle = '#6B7280';
+                this.ctx.lineWidth = 2;
+                
+                this.ctx.beginPath();
+                this.roundRect(boxX, boxY, boxWidth, boxHeight, 8);
+                this.ctx.fill();
+                this.ctx.stroke();
+                
+                // 繪製文字 "得益 _ 損失"
+                this.ctx.fillStyle = isDark ? '#F3F4F6' : '#374151';
+                this.ctx.font = 'bold 14px sans-serif';
+                this.ctx.textAlign = 'center';
+                this.ctx.textBaseline = 'middle';
+                
+                const centerY = boxY + boxHeight / 2;
+                
+                // "得益" 文字 - 紅色
+                this.ctx.fillStyle = '#EF4444'; // 紅色
+                this.ctx.fillText('得益', boxX + 25, centerY);
+                
+                // 比較符號位置
+                const symbolX = boxX + boxWidth / 2;
+                if (this.selectedComparison) {
+                    // 顯示已選擇的比較符號
+                    this.ctx.fillStyle = '#EF4444'; // 紅色
+                    this.ctx.font = 'bold 20px sans-serif';
+                    this.ctx.fillText(this.selectedComparison, symbolX, centerY);
+                } else if (this.isDraggedToCanvas && !this.selectedComparison) {
+                    // 完成任務3後顯示閃爍提示框
+                    this.drawFlashingHint(symbolX, centerY);
+                }
+                
+                // "損失" 文字 - 紅色
+                this.ctx.fillStyle = '#EF4444'; // 紅色
+                this.ctx.font = 'bold 14px sans-serif';
+                this.ctx.fillText('損失', boxX + boxWidth - 25, centerY);
+                
+                this.ctx.restore();
+            }
+            
+            getComparisonDropZone(canvasX, canvasY) {
+                // 比較框的拖拽區域
+                const boxWidth = 140;
+                const boxHeight = 40;
+                const boxX = this.width - this.margin.right - boxWidth - 10;
+                const boxY = this.margin.top + 10;
+                
+                // 檢查是否在比較框區域內
+                if (canvasX >= boxX && canvasX <= boxX + boxWidth && 
+                    canvasY >= boxY && canvasY <= boxY + boxHeight) {
+                    return 'comparison';
+                }
+                
+                return null;
+            }
+            
+            showComparisonDropConfirmation(symbol) {
+                this.ctx.save();
+                
+                const message = `已放置比較符號：${symbol}`;
+                const bgColor = '#10B981'; // 綠色，表示成功
+                
+                const boxX = this.width / 2 - 80;
+                const boxY = this.margin.top + 60;
+                const boxWidth = 160;
+                const boxHeight = 30;
+                
+                // 背景
+                this.ctx.fillStyle = bgColor;
+                this.ctx.beginPath();
+                this.roundRect(boxX, boxY, boxWidth, boxHeight, 8);
+                this.ctx.fill();
+                
+                // 文字
+                this.ctx.fillStyle = '#FFFFFF';
+                this.ctx.font = 'bold 12px sans-serif';
+                this.ctx.textAlign = 'center';
+                this.ctx.textBaseline = 'middle';
+                this.ctx.fillText(message, this.width / 2, boxY + boxHeight / 2);
+                
+                this.ctx.restore();
+                
+                // 2秒後清除訊息
+                setTimeout(() => {
+                    this.drawChart();
+                }, 2000);
+            }
+            
+            showComparisonDropError() {
+                this.ctx.save();
+                
+                const message = '請拖拽到圖表右上方的比較框中';
+                const boxX = this.width / 2 - 120;
+                const boxY = this.margin.top + 60;
+                const boxWidth = 240;
+                const boxHeight = 30;
+                
+                // 背景
+                this.ctx.fillStyle = '#EF4444';
+                this.ctx.beginPath();
+                this.roundRect(boxX, boxY, boxWidth, boxHeight, 8);
+                this.ctx.fill();
+                
+                // 文字
+                this.ctx.fillStyle = '#FFFFFF';
+                this.ctx.font = 'bold 11px sans-serif';
+                this.ctx.textAlign = 'center';
+                this.ctx.textBaseline = 'middle';
+                this.ctx.fillText(message, this.width / 2, boxY + boxHeight / 2);
+                
+                this.ctx.restore();
+                
+                // 2秒後清除訊息
+                setTimeout(() => {
+                    this.drawChart();
+                }, 2000);
+            }
+            
+            drawFlashingHint(centerX, centerY) {
+                // 使用時間戳創造閃爍效果
+                const time = Date.now() / 1000;
+                const alpha = 0.3 + 0.7 * Math.abs(Math.sin(time * 3)); // 閃爍頻率控制
+                
+                this.ctx.save();
+                this.ctx.globalAlpha = alpha;
+                
+                // 繪製有底色的提示框
+                const hintWidth = 24;
+                const hintHeight = 20;
+                const hintX = centerX - hintWidth / 2;
+                const hintY = centerY - hintHeight / 2;
+                
+                // 背景顏色（黃色閃爍提示）
+                this.ctx.fillStyle = '#FCD34D'; // 黃色
+                this.ctx.strokeStyle = '#F59E0B'; // 深黃色邊框
+                this.ctx.lineWidth = 2;
+                
+                this.ctx.beginPath();
+                this.roundRect(hintX, hintY, hintWidth, hintHeight, 4);
+                this.ctx.fill();
+                this.ctx.stroke();
+                
+                // 繪製虛線或指示符號（可選）
+                this.ctx.fillStyle = '#92400E'; // 深色文字
+                this.ctx.font = 'bold 12px sans-serif';
+                this.ctx.textAlign = 'center';
+                this.ctx.textBaseline = 'middle';
+                this.ctx.fillText('?', centerX, centerY);
+                
+                this.ctx.restore();
+                
+                // 持續重繪以保持閃爍效果
+                if (this.isDraggedToCanvas && !this.selectedComparison) {
+                    setTimeout(() => {
+                        this.drawChart();
+                    }, 100); // 每100ms重繪一次
+                }
+            }
+            
+            // 新增：練習題可用性管理函數
+            updateQuizAvailability() {
+                // 練習題區域控制
+                const quizSection = document.getElementById('quizSection');
+                const quizLockMessage = document.getElementById('quizLockMessage');
+                const highElasticProgress = document.getElementById('highElasticProgress');
+                const lowElasticProgress = document.getElementById('lowElasticProgress');
+                
+                // 更新進度顯示
+                if (this.completedTasks.high) {
+                    highElasticProgress.innerHTML = '✅ 已完成高彈性的完整任務流程';
+                    highElasticProgress.className = 'mt-1 text-xs text-green-600 dark:text-green-400';
+                } else {
+                    highElasticProgress.innerHTML = '❌ 尚未完成高彈性的完整任務流程';
+                    highElasticProgress.className = 'mt-1 text-xs text-red-600 dark:text-red-400';
+                }
+                
+                if (this.completedTasks.low) {
+                    lowElasticProgress.innerHTML = '✅ 已完成低彈性的完整任務流程';
+                    lowElasticProgress.className = 'mt-1 text-xs text-green-600 dark:text-green-400';
+                } else {
+                    lowElasticProgress.innerHTML = '❌ 尚未完成低彈性的完整任務流程';
+                    lowElasticProgress.className = 'mt-1 text-xs text-red-600 dark:text-red-400';
+                }
+                
+                // 檢查是否兩種彈性類型都已完成
+                const allTasksCompleted = this.completedTasks.high && this.completedTasks.low;
+                
+                if (allTasksCompleted) {
+                    // 解鎖練習題
+                    quizLockMessage.classList.add('hidden');
+                    
+                    // 啟用所有練習題
+                    const quizInputs = quizSection.querySelectorAll('input[type="radio"]');
+                    quizInputs.forEach(input => {
+                        input.disabled = false;
+                        input.parentElement.classList.remove('opacity-50', 'cursor-not-allowed');
+                    });
+                    
+                    // 啟用重新作答按鈕
+                    const resetQuizBtn = document.getElementById('resetQuiz');
+                    resetQuizBtn.disabled = false;
+                    resetQuizBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    
+                    // 顯示解鎖成功消息
+                    this.showQuizUnlockMessage();
+                } else {
+                    // 練習題仍然鎖定
+                    quizLockMessage.classList.remove('hidden');
+                    
+                    // 禁用所有練習題
+                    const quizInputs = quizSection.querySelectorAll('input[type="radio"]');
+                    quizInputs.forEach(input => {
+                        input.disabled = true;
+                        input.parentElement.classList.add('opacity-50', 'cursor-not-allowed');
+                    });
+                    
+                    // 禁用重新作答按鈕
+                    const resetQuizBtn = document.getElementById('resetQuiz');
+                    resetQuizBtn.disabled = true;
+                    resetQuizBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+            }
+            
+            showQuizUnlockMessage() {
+                // 創建一個臨時的成功消息
+                const quizSection = document.getElementById('quizSection');
+                const unlockMessage = document.createElement('div');
+                unlockMessage.className = 'mb-6 p-4 bg-green-100 dark:bg-green-900 rounded-lg border-l-4 border-green-500';
+                unlockMessage.innerHTML = `
+                    <h3 class="text-lg font-semibold mb-2 text-green-800 dark:text-green-200">🎉 練習題已解鎖！</h3>
+                    <p class="text-green-700 dark:text-green-300">恭喜您！已成功完成高彈性和低彈性的所有任務，現在可以開始練習題了。</p>
+                `;
+                
+                // 插入到題目前面
+                const firstQuestion = quizSection.querySelector('.mb-6.p-4.bg-white');
+                quizSection.insertBefore(unlockMessage, firstQuestion);
+                
+                // 5秒後自動移除消息
+                setTimeout(() => {
+                    if (unlockMessage.parentNode) {
+                        unlockMessage.parentNode.removeChild(unlockMessage);
+                    }
+                }, 5000);
+            }
+        }
+        
+        // 選擇題管理類
+        class QuizManager {
+            constructor() {
+                this.questions = {
+                    q1: { correct: 'decrease', answered: false },
+                    q2: { correct: 'decrease', answered: false },
+                    q3: { correct: 'high', answered: false },
+                    q4: { correct: 'decrease', answered: false },
+                    q5: { correct: 'revenue_decrease', answered: false }
+                };
+                this.score = 0;
+                this.init();
+            }
+            
+            init() {
+                // 初始狀態：禁用所有練習題
+                this.initializeQuizState();
+                
+                // 為每個題目添加事件監聽器
+                Object.keys(this.questions).forEach(questionId => {
+                    const radios = document.querySelectorAll(`input[name="${questionId}"]`);
+                    radios.forEach(radio => {
+                        radio.addEventListener('change', () => {
+                            this.checkAnswer(questionId, radio.value);
+                        });
+                    });
+                });
+                
+                // 重新作答按鈕
+                document.getElementById('resetQuiz').addEventListener('click', () => {
+                    this.resetQuiz();
+                });
+            }
+            
+            initializeQuizState() {
+                // 初始狀態：禁用所有練習題
+                const quizSection = document.getElementById('quizSection');
+                const quizInputs = quizSection.querySelectorAll('input[type="radio"]');
+                
+                quizInputs.forEach(input => {
+                    input.disabled = true;
+                    input.parentElement.classList.add('opacity-50', 'cursor-not-allowed');
+                });
+                
+                // 禁用重新作答按鈕
+                const resetQuizBtn = document.getElementById('resetQuiz');
+                resetQuizBtn.disabled = true;
+                resetQuizBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+            
+            checkAnswer(questionId, selectedValue) {
+                const question = this.questions[questionId];
+                const feedbackDiv = document.getElementById(`feedback${questionId.slice(-1)}`);
+                const isCorrect = selectedValue === question.correct;
+                
+                // 如果是第一次回答這個問題
+                if (!question.answered) {
+                    question.answered = true;
+                    if (isCorrect) {
+                        this.score++;
+                    }
+                }
+                
+                // 顯示反饋
+                feedbackDiv.classList.remove('hidden', 'bg-green-100', 'bg-red-100', 'dark:bg-green-900', 'dark:bg-red-900');
+                
+                if (isCorrect) {
+                    feedbackDiv.classList.add('bg-green-100', 'dark:bg-green-900', 'text-green-800', 'dark:text-green-200');
+                    feedbackDiv.innerHTML = `<strong>✓ 正確！</strong> ${this.getExplanation(questionId)}`;
+                } else {
+                    feedbackDiv.classList.add('bg-red-100', 'dark:bg-red-900', 'text-red-800', 'dark:text-red-200');
+                    feedbackDiv.innerHTML = `<strong>✗ 錯誤。</strong> ${this.getExplanation(questionId)}`;
+                }
+                
+                // 檢查是否所有題目都已回答
+                this.updateTotalScore();
+            }
+            
+            getExplanation(questionId) {
+                const explanations = {
+                    q1: '高彈性需求下，價格上漲會導致需求量大幅下降，總收入減少。',
+                    q2: '低彈性需求下，價格下跌時需求量增加有限，總收入減少。',
+                    q3: '價格變化20%，需求量變化40%，彈性係數 = (40%/20%) = 2 > 1，屬於高彈性。',
+                    q4: '高彈性需求下，降低價格會使需求量大幅增加，從而增加總收入。',
+                    q5: '彈性係數 = (40%/25%) = 1.6 > 1（高彈性），價格上漲25%使總收入 = 1.25×0.6 = 0.75（減少25%）。'
+                };
+                return explanations[questionId];
+            }
+            
+            updateTotalScore() {
+                const answeredCount = Object.values(this.questions).filter(q => q.answered).length;
+                const totalScoreDiv = document.getElementById('totalScore');
+                
+                if (answeredCount === 5) {
+                    const percentage = Math.round((this.score / 5) * 100);
+                    let grade = '';
+                    let color = '';
+                    
+                    if (percentage >= 90) {
+                        grade = '優秀';
+                        color = 'text-green-600 dark:text-green-400';
+                    } else if (percentage >= 70) {
+                        grade = '良好';
+                        color = 'text-blue-600 dark:text-blue-400';
+                    } else if (percentage >= 60) {
+                        grade = '及格';
+                        color = 'text-yellow-600 dark:text-yellow-400';
+                    } else {
+                        grade = '需要加強';
+                        color = 'text-red-600 dark:text-red-400';
+                    }
+                    
+                    totalScoreDiv.innerHTML = `
+                        <div class="text-xl font-bold ${color}">
+                            總分：${this.score}/5 (${percentage}%) - ${grade}
+                        </div>
+                        <div class="text-sm mt-2 text-gray-600 dark:text-gray-400">
+                            ${this.getScoreMessage(percentage)}
+                        </div>
+                    `;
+                } else {
+                    totalScoreDiv.innerHTML = `已完成 ${answeredCount}/5 題，目前得分：${this.score} 分`;
+                    totalScoreDiv.className = 'text-lg font-semibold text-blue-800 dark:text-blue-200';
+                }
+            }
+            
+            getScoreMessage(percentage) {
+                if (percentage >= 90) {
+                    return '太棒了！您對需求價格彈性的概念掌握得非常好！';
+                } else if (percentage >= 70) {
+                    return '很好！您對大部分概念都理解正確，可以再複習一下錯誤的部分。';
+                } else if (percentage >= 60) {
+                    return '還不錯！建議您重新回顧需求彈性與總收入的關係。';
+                } else {
+                    return '建議您重新學習需求價格彈性的基本概念，然後再次嘗試。';
+                }
+            }
+            
+            resetQuiz() {
+                // 重置所有狀態
+                Object.keys(this.questions).forEach(questionId => {
+                    this.questions[questionId].answered = false;
+                    
+                    // 清除選中狀態
+                    const radios = document.querySelectorAll(`input[name="${questionId}"]`);
+                    radios.forEach(radio => {
+                        radio.checked = false;
+                    });
+                    
+                    // 隱藏反饋
+                    const feedbackDiv = document.getElementById(`feedback${questionId.slice(-1)}`);
+                    feedbackDiv.classList.add('hidden');
+                });
+                
+                this.score = 0;
+                
+                // 重置總分顯示
+                const totalScoreDiv = document.getElementById('totalScore');
+                totalScoreDiv.textContent = '完成所有題目後將顯示總分';
+                totalScoreDiv.className = 'text-lg font-semibold text-blue-800 dark:text-blue-200';
+            }
+        }
+        
+        // 初始化應用程式
+        window.addEventListener('load', () => {
+            new ElasticitySimulator('economicChart');
+            new QuizManager();
+        });
+    </script>
+</body>
+</html>
